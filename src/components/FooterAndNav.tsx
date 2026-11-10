@@ -7,8 +7,6 @@ import DriftbarFooter from './DriftbarFooter';
 import { RainbowButton } from './RainbowButton';
 
 interface FooterAndNavProps {
-  theme: 'dark' | 'light';
-  onToggleTheme: () => void;
   onOpenContact: (defaultPlan?: string) => void;
   onBookCall: () => void;
   contactModalPlan: string | null;
@@ -29,8 +27,6 @@ const MOBILE_NAV_LINKS = [
 ];
 
 export const FooterAndNav: React.FC<FooterAndNavProps> = ({
-  theme,
-  onToggleTheme,
   onOpenContact,
   onBookCall,
   contactModalPlan,
@@ -299,52 +295,6 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                     </a>
                   </li>
                 ))}
-                <li className="pt-2 mt-1 border-t border-white/10">
-                  <button
-                    type="button"
-                    onClick={onToggleTheme}
-                    className="w-full flex items-center justify-between min-h-[48px] px-3 py-3 rounded-lg text-[15px] font-medium text-[#edf0f5] hover:bg-white/[0.04] transition-colors cursor-pointer"
-                  >
-                    <span>Appearance</span>
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161920] border border-[#858b94]/25 font-mono-tech text-[11px] uppercase tracking-wider text-[#edf0f5]">
-                      {theme === 'dark' ? (
-                        <>
-                          <svg
-                            className="w-3.5 h-3.5 text-[#fbbf24]"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <circle cx="12" cy="12" r="4" />
-                            <path
-                              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
-                              strokeLinecap="round"
-                            />
-                          </svg>
-                          <span>Light Mode</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-3.5 h-3.5 text-[#2563eb]"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path
-                              d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                          <span>Dark Mode</span>
-                        </>
-                      )}
-                    </span>
-                  </button>
-                </li>
               </ul>
             </motion.div>
           )}
@@ -388,7 +338,7 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
             </span>
           </a>
 
-          {/* Right Nav Links + Contact Button + Theme Toggle */}
+          {/* Right Nav Links + Contact Button */}
           <div className="flex items-center gap-3 text-[13px] text-[#aeb5c0]">
             <a
               href="#blog"
@@ -417,55 +367,6 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                 <span>CONTACT</span>
               </span>
             </button>
-
-            {/* Theme Toggle Button (Dark / Light Mode) */}
-            <button
-              type="button"
-              onClick={onToggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              className="group relative inline-flex items-center justify-center min-h-[44px] p-[1px] rounded-[8px] bg-clavion-dark-btn-border cursor-pointer shrink-0"
-            >
-              <span className="inline-flex items-center gap-1.5 min-h-[42px] px-3 py-2 rounded-[7px] bg-[#161920] group-hover:bg-[#1c2029] font-mono-tech text-[11px] uppercase tracking-wider text-[#edf0f5] transition-colors whitespace-nowrap">
-                {theme === 'dark' ? (
-                  <>
-                    <svg
-                      className="w-3.5 h-3.5 text-[#fbbf24] transition-transform duration-300 group-hover:rotate-45"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      aria-hidden="true"
-                    >
-                      <circle cx="12" cy="12" r="4" />
-                      <path
-                        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                    <span>LIGHT</span>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      className="w-3.5 h-3.5 text-[#2563eb] transition-transform duration-300 group-hover:-rotate-12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <span>DARK</span>
-                  </>
-                )}
-              </span>
-            </button>
           </div>
         </nav>
 
@@ -486,54 +387,8 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
             </span>
           </a>
 
-          {/* Right Controls: Theme Toggle + Menu Toggle Button */}
+          {/* Right Controls: Menu Toggle Button */}
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onToggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              className="h-11 min-w-[44px] min-h-[44px] px-3 rounded-[8px] bg-[#161920] hover:bg-[#1c2029] border border-[#858b94]/20 flex items-center justify-center gap-1.5 text-[#edf0f5] font-mono-tech text-[10.5px] uppercase tracking-wider transition-colors cursor-pointer"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <svg
-                    className="w-4 h-4 text-[#fbbf24]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <circle cx="12" cy="12" r="4" />
-                    <path
-                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <span>LIGHT</span>
-                </>
-              ) : (
-                <>
-                  <svg
-                    className="w-4 h-4 text-[#2563eb]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>DARK</span>
-                </>
-              )}
-            </button>
-
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}

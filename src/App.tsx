@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, useScroll } from 'motion/react';
 import { BlogPost, CaseStudy } from './data/clavionData';
 import GradientASCII from './components/GradientASCII';
@@ -23,39 +23,10 @@ import { RainbowButton } from './components/RainbowButton';
 
 export default function App() {
   const { scrollYProgress } = useScroll();
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = window.localStorage.getItem('heydots_theme');
-        if (saved === 'light' || saved === 'dark') return saved;
-      } catch {
-        // Ignore storage errors
-      }
-    }
-    return 'dark';
-  });
   const [contactModalPlan, setContactModalPlan] = useState<string | null>(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [infoModalPage, setInfoModalPage] = useState<'about' | 'privacy' | '404' | null>(null);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'light') {
-      root.classList.add('light-theme');
-    } else {
-      root.classList.remove('light-theme');
-    }
-    try {
-      window.localStorage.setItem('heydots_theme', theme);
-    } catch {
-      // Ignore storage errors
-    }
-  }, [theme]);
-
-  const handleToggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
 
   const currentPathname = typeof window !== 'undefined' ? window.location.pathname : '/';
   const isNotFoundRoute =
@@ -70,13 +41,7 @@ export default function App() {
   };
 
   return (
-    <div
-      className={`min-h-screen relative transition-colors duration-300 ${
-        theme === 'light'
-          ? 'bg-[#fbfbff] text-[#0b0d14] selection:bg-[#8b5cf6]/25 selection:text-[#0b0d14]'
-          : 'bg-[#0a0d14] text-[#edf0f5] selection:bg-[#66bcd3]/30 selection:text-white'
-      }`}
-    >
+    <div className="min-h-screen relative bg-[#0a0d14] text-[#edf0f5] selection:bg-[#66bcd3]/30 selection:text-white">
       {/* Accessible Skip-to-Content Link (DEF-8) */}
       <a
         href="#main-content"
@@ -90,28 +55,22 @@ export default function App() {
       {/* Global Full-Website <GradientASCII /> Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <GradientASCII
-          colors={
-            theme === 'light'
-              ? ['#ffffff', '#ede9fe', '#c4b5fd', '#818cf8']
-              : ['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8']
-          }
+          colors={['#1e3fd8', '#f6f8ff', '#a5d8ff', '#38bdf8']}
           shape="horizon"
           characters=" =+xX0S8#@"
           cellSize={18}
           density={0.8}
-          gradientOpacity={theme === 'light' ? 0.42 : 0.65}
-          glyphOpacity={theme === 'light' ? 0.32 : 0.85}
-          glow={theme === 'light' ? 0.15 : 0.25}
+          gradientOpacity={0.65}
+          glyphOpacity={0.85}
+          glow={0.25}
           dpr={1}
         />
         {/* Subtle radial atmospheric veil to preserve high contrast for typography & cards across all sections */}
         <div
-          className="absolute inset-0 transition-all duration-500"
+          className="absolute inset-0"
           style={{
             background:
-              theme === 'light'
-                ? 'radial-gradient(60% 45% at 85% 8%, rgba(167, 139, 250, 0.22) 0%, rgba(255, 255, 255, 0) 60%), radial-gradient(55% 45% at 8% 55%, rgba(125, 211, 252, 0.18) 0%, rgba(255, 255, 255, 0) 60%), radial-gradient(50% 40% at 70% 95%, rgba(244, 114, 182, 0.10) 0%, rgba(255, 255, 255, 0) 60%), linear-gradient(180deg, rgba(251, 251, 255, 0.86) 0%, rgba(246, 245, 255, 0.88) 50%, rgba(240, 244, 255, 0.92) 100%)'
-                : 'radial-gradient(circle at 50% 35%, rgba(10, 13, 20, 0.42) 0%, rgba(10, 13, 20, 0.52) 60%, rgba(10, 13, 20, 0.72) 100%)',
+              'radial-gradient(circle at 50% 35%, rgba(10, 13, 20, 0.42) 0%, rgba(10, 13, 20, 0.52) 60%, rgba(10, 13, 20, 0.72) 100%)',
           }}
         />
       </div>
@@ -180,8 +139,6 @@ export default function App() {
         </main>
 
         <FooterAndNav
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
           onOpenContact={handleOpenContact}
           onBookCall={handleBookIntroCall}
           contactModalPlan={contactModalPlan}

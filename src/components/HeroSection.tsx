@@ -13,29 +13,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookC
 
   return (
     <section id="home" className="relative pt-9 pb-14 overflow-hidden scroll-mt-20">
-      {/* Light-mode animated aurora (hidden in dark mode via CSS) */}
-      <div className="hero-aurora" aria-hidden="true">
-        <span className="hero-conic" />
-        <span className="hero-orb hero-orb--a" />
-        <span className="hero-orb hero-orb--b" />
-        <span className="hero-orb hero-orb--c" />
-        <span className="hero-grid" />
-        <span className="hero-ring hero-ring--1" />
-        <span className="hero-ring hero-ring--2" />
-        {Array.from({ length: 14 }).map((_, i) => (
-          <span
-            key={i}
-            className="hero-spark"
-            style={{
-              left: `${(i * 37) % 100}%`,
-              top: `${10 + ((i * 53) % 75)}%`,
-              animationDelay: `${(i % 7) * 0.9}s`,
-              animationDuration: `${6 + (i % 5)}s`,
-            }}
-          />
-        ))}
-        <span className="hero-fade" />
-      </div>      <div className="max-w-[1200px] mx-auto px-5 flex flex-col items-center text-center relative z-10">
+      <div className="max-w-[1200px] mx-auto px-5 flex flex-col items-center text-center relative z-10">
         {/* Top HeyDots Brand Mark in Pacifico Font */}
         <motion.a
           href="#home"
