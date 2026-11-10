@@ -1,0 +1,445 @@
+Bug Analysis Report — HeyDots (heydot.ai.studio) — 2026-11-10
+Data coverage: ✅ live site (browser) — 9 automated passes at 1440×900 / 768×1024 / 390×844 · ➖ PostHog not needed (third-party site, no project telemetry) · ➖ Langfuse not needed (no agent chain) · ➖ GitHub not needed (nothing read or filed) · 📎 user-provided materials — the URL only
+
+Conclusion
+High
+The site's single conversion path is broken. Every primary CTA ("START A PROJECT", "CONTACT", "BOOK A INTRO CALL", "SCHEDULE A CONSULTATION", "TALK TO AN EXPERT") opens the same contact modal. Filling that modal and pressing SUBMIT REQUEST renders a success state — "Consultation Request Received — Thank you, Audit Tester! Our engineering lead will reach out to audit.tester@example.com shortly." — while the browser issues zero network requests: 98 requests before submit, 98 after, none during. Nothing is written to localStorage or sessionStorage either. The lead is discarded and the visitor is told it was received.
+
+Second, 68% of in-page navigation is dead: 17 of 25 anchor links point at element IDs that do not exist in the document (#solutions, #architecture, #benefits, #contact, #about, #featured-video, #home). Clicking them changes the URL hash and scrolls nowhere. The entire footer navigation column is affected.
+
+Third, the site has no routing and no crawl surface: every unknown path returns HTTP 200 with the same 1,571-byte SPA shell, and /robots.txt, /sitemap.xml and /favicon.ico all return 404. Fourth, performance is well outside budget: LCP 9,104 ms, FCP 3,976 ms, 505 KB of JavaScript, and a 5.3 MB poster image on a <video> element that has no source at all.
+
+No JavaScript errors, no failed requests and no 4xx/5xx responses were observed on the landing page — the defects are behavioural and structural, not crashes. Nine defects are packaged below as filing-ready DEF payloads. Nothing was filed to any tracker.
+
+Scope & impact
+Feature
+Marketing site: contact/lead capture, in-page navigation, mobile menu, SEO surface, page performance
+Environment / version
+Production, https://heydot.ai.studio/ — single-page React bundle index-YkKRvQQ4.js (516,384 bytes), CSS index-mMqGXISi.css (73 KB). No version string or build tag is exposed in the HTML.
+Affected population
+100% of visitors who use any CTA (all CTAs share one modal) and 100% of visitors who use footer navigation. Mobile visitors additionally hit the menu and tap-target defects.
+Measured signals
+Network requests on submit
+0
+98 before → 98 after; no POST/PUT/PATCH observed
+
+Dead anchor links
+17 / 25
+68% of in-page links target a non-existent ID
+
+LCP (lab)
+9,104 ms
+FCP 3,976 ms · TTFB 1,213 ms · 1,213 KB transferred
+
+JS errors / failed requests
+0 / 0
+7 console warnings, all WebGL/GPU driver noise
+
+Issue summary — ranked by severity
+ID	Severity	Issue	Where	Evidence
+DEF-1	Critical	Contact form reports success but sends nothing — leads silently lost	Contact modal, all CTAs	0 network requests across submit; success copy rendered
+DEF-2	High	17 of 25 in-page anchor links point to non-existent IDs	Footer nav, header nav	#solutions etc. absent from document; scroll delta 0
+DEF-3	High	LCP 9.1 s / FCP 4.0 s; 5.3 MB poster on a source-less video	Landing page, footer	PerformanceObserver + resource timing
+DEF-4	High	No routing: every unknown path returns HTTP 200; robots/sitemap/favicon 404	Server / SPA fallback	/nonexistent-abc → 200, 1,571 B shell
+DEF-5	Medium	Contact modal fields have no label, name, required or autocomplete; no focus trap; Esc does not close	Contact modal	4 inputs, all name="", required=false
+DEF-6	Medium	Mobile menu is not a dialog: no role, no aria-expanded, 16 px-tall links	Mobile header	Panel role=null; link heights 16 px
+DEF-7	Medium	Hero "AI prompt" widget is a non-functional mock — no input element, submit does nothing	"Why choose us" section	0 inputs, 0 contenteditable, 0 requests on submit
+DEF-8	Low	62 content images with empty alt; no skip link; no canonical / og:image / structured data	Whole page	202 imgs, 62 alt="", 0 missing alt
+DEF-9	Low	Copy defects: "BOOK A INTRO CALL", all three blog posts dated Nov 19 2025, footer video has no source	Hero, blog, footer	String match + <video> with 0 <source>
+Evidence & timeline
+Step	Action	Status	Evidence
+01	GET https://heydot.ai.studio/	OK	HTTP 200, 1,571 B shell, TTFB 1,213 ms, title "HeyDots - AI Automation & Agency"
+02	Load landing page, capture console/network	OK	0 pageerrors, 0 requestfailed, 0 4xx/5xx; 7 console warnings (WebGL software fallback, "GPU stall due to ReadPixels")
+03	Enumerate anchors and resolve targets	ERROR	25 anchor links; 17 resolve to null — #home×2, #solutions×5, #architecture×4, #benefits×2, #contact×2, #about, #featured-video. Only #service #process #case #pricing #blog exist
+04	Click each dead anchor, measure scroll	ERROR	scrollY 0 → 0 for all eight sampled; location.hash changes to #solutions etc. with no movement
+05	Click hero "START A PROJECT"	OK	Modal opens: "CUSTOM PROJECT / Start Your AI Automation Journey"
+06	Click header "CONTACT"	OK	Modal opens: "BOTTOM DOCK CONTACT / Start Your AI Automation Journey"
+07	Submit contact form empty	OK	Inline validation: "Please enter your full name." — modal stays open
+08	Fill all 4 fields, submit	ERROR	Success state rendered; 0 network requests (98 → 98); localStorage and sessionStorage both empty
+09	Inspect JS bundle for a submit endpoint	ERROR	516,384 B bundle: fetch(×1, no /api/ path, no formspree / axios / supabase / calendly / emailjs / netlify / getform / web3forms; only 2 mailto: strings
+10	Request unknown paths	ERROR	/nonexistent-abc, /pricing, /about, /blog, /contact, /services → all HTTP 200, all 1,571 B (SPA catch-all, no 404)
+11	Request crawl assets	ERROR	/robots.txt 404 (9 B), /sitemap.xml 404 (9 B), /favicon.ico 404 (9 B)
+12	Measure Core Web Vitals (lab)	ERROR	FCP 3,976 ms · LCP 9,104 ms · CLS 0.0007 · 94 resources · 1,213 KB · JS 505 KB / 2,082 ms
+13	Inspect footer <video>	ERROR	No src, 0 <source>, readyState 0, networkState 0; poster PNG is 5,570,213 B and returns 200
+14	Open mobile menu at 390×844	OK	Panel opens, scroll locked (scrollY 0 → 0), link click navigates to #pricing and closes menu
+15	Audit mobile menu semantics	ERROR	Panel role=null, aria-modal=null; trigger has no aria-expanded/aria-controls; menu links 16 px tall
+16	Audit modal keyboard behaviour	ERROR	Escape does not close the modal; Tab moves focus to page content behind the overlay
+17	Audit hero prompt widget	ERROR	<form> contains 0 input/textarea and 0 contenteditable; clicking submit changes only the placeholder text, 0 requests
+18	Audit images and landmarks	OK	202 images, 0 broken, 0 missing alt, 62 with alt=""; 1 h1, no heading-level skips, 1 main, 5 nav, no skip link, 0 aria-live
+Per-issue analysis — WHERE / WHY / WHO
+DEF-1 · Contact form reports success but transmits nothing
+Critical
+Where
+Contact modal (BOTTOM DOCK CONTACT / CUSTOM PROJECT), reachable from every CTA on the page. Component renders a <form> with no action and no method.
+Why
+The submit handler transitions local component state to a "received" view without any transport call. Confirmed by instrumentation: request count is identical before and after submit (98 → 98), no POST/PUT/PATCH is emitted, and neither localStorage nor sessionStorage receives a key. The bundle contains no form endpoint, no /api/ path and no third-party form SDK.
+Who
+Every prospective client. This is the only lead-capture surface on the site, so the practical impact is 100% loss of inbound enquiries that arrive through the website — while the visitor is told an engineering lead will reply within 24 hours.
+Evidence (screenshot): contact_submit.png — the success state rendered after a submit that issued zero network requests. Open screenshot
+
+DEF-2 · 17 of 25 in-page anchors target non-existent IDs
+High
+Where
+Footer "Services" / "Case Studies" / "Connect" columns and the header nav. Document contains only root, service, process, case, pricing, blog, footer.
+Why
+Links were authored against a section taxonomy (#solutions, #architecture, #benefits, #contact, #about, #featured-video, #home) that the rendered page does not implement. Clicking sets the hash and scrolls 0 px — verified for all eight sampled hrefs.
+Who
+Any visitor using footer navigation to reach services, case studies or contact — i.e. the highest-intent traffic. Also breaks deep-linking: a shared /#solutions URL lands at the top of the page.
+DEF-3 · LCP 9.1 s and a 5.3 MB poster on a source-less video
+High
+Where
+Landing page as a whole; the footer <video class="footer__video">.
+Why
+Lab measurement: FCP 3,976 ms, LCP 9,104 ms, TTFB 1,213 ms, 94 resources / 1,213 KB, with a single 505 KB JS bundle taking 2,082 ms. The footer video declares preload="metadata" but has no src and no <source> child, so it can never play — yet its poster PNG is 5,570,213 bytes and is fetched successfully (HTTP 200).
+Who
+All visitors, disproportionately mobile and low-bandwidth users. LCP of 9.1 s is roughly 3× Google's "poor" threshold (2.5 s), which also depresses paid-search quality signals.
+DEF-4 · No routing and no crawl surface
+High
+Where
+Server / SPA fallback configuration.
+Why
+Every path — including /nonexistent-abc — returns HTTP 200 with the identical 1,571-byte shell, so there is no 404 state and no per-page metadata. /robots.txt, /sitemap.xml and /favicon.ico all return 404. The document also has no rel=canonical, no og:image, no twitter:image and no JSON-LD.
+Who
+Search crawlers and anyone sharing the link: social cards render without an image, and mistyped or stale URLs silently show the homepage instead of a not-found page.
+DEF-5 · Contact modal form is unlabelled and keyboard-hostile
+Medium
+Where
+Contact modal, four fields (Full Name, Work Email, Company / Website, "What would you like to automate?").
+Why
+All four inputs have name="", id="", no <label for>, no aria-label, no autocomplete and required=false; the visible asterisks are decorative only and validation is custom JS. Escape does not dismiss the modal, and Tab moves focus to page content behind the overlay rather than staying inside it.
+Who
+Screen-reader and keyboard users (fields announce as unlabelled edit boxes), and password-manager / autofill users. Also anyone who expects Esc to close a dialog.
+DEF-6 · Mobile menu lacks dialog semantics and has 16 px tap targets
+Medium
+Where
+Mobile header at 390×844; trigger is a 40×40 button at x=321, y=779.
+Why
+The opened panel has role=null and aria-modal=null; the trigger exposes no aria-expanded or aria-controls, so assistive tech cannot tell the menu opened. Menu links measure 16 px in height, well under the 44 px touch-target guideline. Elsewhere on the page, icon buttons measure 24×24 and 25×25, and testimonial dots 20×6.
+Who
+All mobile visitors (mis-taps on 16 px rows) and mobile screen-reader users (no state announcement).
+Evidence (screenshot): mobile_menu_v2.png — mobile menu open at 390×844; the panel has no dialog role and the trigger has no aria-expanded. Open screenshot
+
+DEF-7 · Hero "AI prompt" widget is a non-functional mock
+Medium
+Where
+"Why choose us" section — the chat-style card reading "How can we use AI to handle inquiries, tasks, and follow-ups…" with Attach / voice / generate controls.
+Why
+The <form> contains zero input, zero textarea and zero contenteditable elements; the prompt text is a static <span> with a blinking caret. Clicking the submit button changes only the placeholder string and issues no request. Typing produces no change.
+Who
+Visitors who read it as a live product demo — it invites interaction and then does nothing, which reads as a broken product rather than a static illustration.
+DEF-8 · Accessibility and SEO metadata gaps
+Low
+Where
+Whole page.
+Why
+202 images, 0 broken, 0 missing alt, but 62 carry alt="" including large decorative SVGs up to 1,158 px wide. No skip link, 0 aria-live regions (so the form's success/validation messages are not announced), 5 nav landmarks with no distinguishing labels, and no canonical / og:image / JSON-LD.
+Who
+Screen-reader users (unannounced form feedback) and keyboard users (no skip-to-content).
+DEF-9 · Copy and content defects
+Low
+Where
+Hero secondary CTA, blog cards, footer.
+Why
+Hero CTA reads "BOOK A INTRO CALL" (should be "AN"). All three blog cards are dated "Nov 19, 2025" — identical dates on every post. The footer <video> has no source, so the intended footer motion asset never plays. Copyright reads "© 2026".
+Who
+All visitors; primarily a credibility signal on a page selling engineering quality.
+Root-cause hypotheses
+H1 · The contact form's submit handler was never wired to a backend
+High
+Hypothesis (confidence: High). The modal is a UI-complete prototype: state machine, validation copy and success screen are all implemented, but the transport step is absent. The bundle contains no form endpoint, no /api/ path and no third-party form SDK, and the submit produces exactly zero requests — so there is no code path that could deliver the payload.
+
+Evidence
+98 requests before submit, 98 after, none during; localStorage/sessionStorage empty; bundle scan: fetch(×1, 0 /api/ paths, no formspree/axios/supabase/calendly/emailjs/netlify/getform/web3forms; <form> has no action and no method.
+To confirm
+Read the submit handler in the source (search the bundle for the success-state string "Consultation Request Received") and confirm no fetch/XMLHttpRequest call precedes the state transition; then check the intended destination (CRM, email service, or serverless function) exists.
+H2 · Anchor IDs were renamed during a section refactor and the links were not updated
+Medium
+Hypothesis (confidence: Medium, inferred). The live document exposes a short, generic ID set (service, process, case, pricing, blog) while the links reference a richer taxonomy (solutions, architecture, benefits, contact, about, featured-video). That pattern is consistent with sections being consolidated and re-ID'd while the footer/header link map kept the old names. The mechanism is inferred from the ID mismatch, not observed in source control.
+
+Evidence
+17 of 25 anchors resolve to null; the 5 working anchors all match the generic ID set; clicking a dead anchor sets the hash but scrolls 0 px.
+To confirm
+Diff the section components' id attributes against the nav link map in the repo; or add the missing IDs and re-run the anchor resolution check.
+H3 · The SPA fallback rewrites every path to index.html, and static crawl assets were never added
+High
+Hypothesis (confidence: High). A catch-all rewrite serves the 1,571-byte shell for any path, which is why /nonexistent-abc returns 200 rather than 404. Separately, robots.txt, sitemap.xml and favicon.ico return 404 with a 9-byte body — the host answers, the files simply do not exist.
+
+Evidence
+Six distinct paths all return HTTP 200 with byte-identical 1,571 B bodies; the three crawl assets return 404 with 9-byte bodies.
+To confirm
+Inspect the host's rewrite/redirect rules; confirm whether a 404 route exists in the router at all.
+H4 · The footer video asset was replaced by a still poster and the source was dropped
+Medium
+Hypothesis (confidence: Medium, inferred). The element keeps loop, playsinline and preload="metadata" — all video-playback intent — but has no src and no <source>, while a 5.3 MB poster is present and loads. That is consistent with the video file being removed or never uploaded while the poster was kept, leaving a heavy still image behind a dead player.
+
+Evidence
+<video class="footer__video" poster="…" loop playsinline preload="metadata"></video> — 0 <source> children, readyState 0, networkState 0; poster returns HTTP 200 at 5,570,213 B.
+To confirm
+Check the asset manifest / CDN for the intended .mp4/.webm; if it is intentionally a still, replace the <video> with an <img> and compress the poster.
+DEF payloads
+DEF-1 · Contact form shows success but sends no request — leads are lost
+Type
+bug
+Summary
+The only lead-capture form on heydot.ai.studio renders a success confirmation ("Consultation Request Received … will reach out … shortly") while issuing zero network requests. Every CTA on the page routes to this modal, so all inbound website enquiries are silently discarded. Root cause (confidence: High): the submit handler transitions UI state without any transport call; the bundle contains no form endpoint and no third-party form SDK.
+Severity
+Critical
+Priority
+Urgent
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139 (Playwright), 1440×900; reproduced on mobile 390×844
+Feature area
+Contact / Lead capture
+Source
+Live black-box browser audit, 2026-11-10 — network instrumentation across the submit window
+Evidence
+Request count 98 before submit → 98 after, 0 requests during; no POST/PUT/PATCH; localStorage and sessionStorage empty; bundle index-YkKRvQQ4.js (516,384 B) has fetch(×1, 0 "/api/" paths, no formspree/axios/supabase/calendly/emailjs/netlify/getform/web3forms; form has no action and no method. Screenshot: contact_submit.png
+Steps to reproduce
+Open https://heydot.ai.studio/
+Click the header "CONTACT" button (or any CTA, e.g. "START A PROJECT")
+Open DevTools → Network, clear the log
+Fill Full Name, Work Email, Company, and the automation textarea
+Click "SUBMIT REQUEST"
+Expected
+A POST to a form/CRM endpoint (or a mailto/third-party form submission) carrying the four field values, and a success state only after that request resolves.
+Actual
+Success state renders immediately: "Consultation Request Received — Thank you, Audit Tester! Our engineering lead will reach out to audit.tester@example.com shortly." Network panel shows 0 new requests; no storage write occurs.
+DEF-2 · 17 of 25 in-page anchor links point to non-existent element IDs
+Type
+bug
+Summary
+Footer and header navigation links target section IDs that do not exist in the rendered document (#solutions, #architecture, #benefits, #contact, #about, #featured-video, #home). Clicking them updates the URL hash but scrolls nowhere, so footer navigation to services, case studies and contact is entirely non-functional. Root cause (confidence: Medium, inferred): section IDs were consolidated/renamed while the link map kept the old taxonomy.
+Severity
+High
+Priority
+High
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139, 1440×900 and 390×844
+Feature area
+Navigation / Footer
+Source
+Live black-box browser audit, 2026-11-10 — anchor resolution + click/scroll measurement
+Evidence
+25 anchor links enumerated; 17 resolve to null. Dead: #home×2, #solutions×5, #architecture×4, #benefits×2, #contact×2, #about, #featured-video. Present IDs: root, service, process, case, pricing, blog, footer. Click test: scrollY 0 → 0 for #home, #solutions, #architecture, #benefits, #contact, #about, #featured-video, #service.
+Steps to reproduce
+Open https://heydot.ai.studio/
+Scroll to the footer
+Click "AI Chatbots & Voice" (href="#solutions")
+Observe the URL becomes /#solutions and the page does not move
+Repeat for "Data Insights" (#architecture), "85% Cost Reduction" (#benefits), "Book an Audit" (#contact)
+Expected
+Each link scrolls to its corresponding section, or the link is removed if the section no longer exists.
+Actual
+Hash changes, scroll position stays at 0; the target element does not exist in the DOM.
+DEF-3 · LCP 9.1 s with a 5.3 MB poster on a source-less footer video
+Type
+bug
+Summary
+Lab Core Web Vitals are far outside budget: FCP 3,976 ms, LCP 9,104 ms, TTFB 1,213 ms, 94 resources / 1,213 KB, driven by a 505 KB JS bundle (2,082 ms) and a 5,570,213-byte poster PNG attached to a footer video element that has no src and no source child and therefore never plays. Root cause (confidence: Medium, inferred): the video asset was dropped while its poster was retained, and the bundle is shipped unsplit.
+Severity
+High
+Priority
+High
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139, 1440×900, cold cache
+Feature area
+Performance / Footer media
+Source
+Live black-box browser audit, 2026-11-10 — PerformanceObserver (LCP/CLS/FCP) + Resource Timing
+Evidence
+FCP 3,976 ms; LCP 9,104 ms; CLS 0.0007; 94 resources; 1,213 KB transferred; index-YkKRvQQ4.js 505 KB / 2,082 ms; index-mMqGXISi.css 73 KB; poster hf_20261014_121838_….png = 5,570,213 B (HTTP 200); video readyState 0, networkState 0, 0 source children.
+Steps to reproduce
+Open https://heydot.ai.studio/ in a fresh profile with cache disabled
+Record a Performance trace
+Read LCP and FCP from the trace
+Inspect the footer <video> element and its poster request size
+Expected
+LCP under 2.5 s; no multi-megabyte image fetched for a non-playing element.
+Actual
+LCP 9,104 ms; a 5.3 MB poster is downloaded for a video that has no source and cannot play.
+DEF-4 · Every unknown path returns HTTP 200; robots.txt, sitemap.xml and favicon.ico are 404
+Type
+bug
+Summary
+The host rewrites all paths to the SPA shell, so /nonexistent-abc and five other paths all return HTTP 200 with a byte-identical 1,571-byte body — there is no 404 state. robots.txt, sitemap.xml and favicon.ico all return 404. The document also lacks rel=canonical, og:image, twitter:image and JSON-LD. Root cause (confidence: High): catch-all rewrite with no not-found route and no static crawl assets deployed.
+Severity
+High
+Priority
+Medium
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — HTTP client + Chromium 139
+Feature area
+Routing / SEO
+Source
+Live black-box browser audit, 2026-11-10 — direct HTTP status probes
+Evidence
+/nonexistent-abc, /pricing, /about, /blog, /contact, /services → all 200, all 1,571 B. /robots.txt 404 (9 B), /sitemap.xml 404 (9 B), /favicon.ico 404 (9 B). Head: no link[rel=canonical], no meta[property="og:image"], no meta[name="twitter:image"], 0 script[type="application/ld+json"].
+Steps to reproduce
+curl -I https://heydot.ai.studio/nonexistent-abc → HTTP 200
+curl -I https://heydot.ai.studio/robots.txt → HTTP 404
+curl -I https://heydot.ai.studio/sitemap.xml → HTTP 404
+curl -I https://heydot.ai.studio/favicon.ico → HTTP 404
+Expected
+Unknown paths return HTTP 404 with a not-found page; robots.txt and sitemap.xml are served; a favicon and social preview image exist.
+Actual
+Unknown paths return 200 with the homepage shell; the three crawl assets return 404; no social preview image is declared.
+DEF-5 · Contact modal fields are unlabelled, unnamed and not keyboard-trapped
+Type
+bug
+Summary
+All four contact-modal inputs have empty name and id, no associated label, no aria-label, no autocomplete and required=false; the required asterisks are decorative and validation is custom JS. Escape does not close the dialog and Tab moves focus to page content behind the overlay. Root cause (confidence: High): the modal was built as a visual mock without form semantics or a focus trap.
+Severity
+Medium
+Priority
+Medium
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139, 1440×900, keyboard only
+Feature area
+Contact / Accessibility
+Source
+Live black-box browser audit, 2026-11-10 — DOM attribute inspection + keyboard walk
+Evidence
+4 inputs: name="", id="", hasLabel=false, aria=null, autocomplete=null, required=false. Escape → dialog still present (esc_closes=false). Tab from the dialog moved focus to a "SCHEDULE A CONSULTATION" button behind the overlay. 0 aria-live regions on the page.
+Steps to reproduce
+Open https://heydot.ai.studio/
+Click "CONTACT"
+Press Tab repeatedly — focus leaves the dialog and lands on page content behind it
+Press Escape — the dialog stays open
+Inspect any field — no label, no name, no required attribute
+Expected
+Each field has a programmatic label and a name; required fields are marked required; focus is trapped inside the dialog; Escape closes it and returns focus to the trigger.
+Actual
+Fields are unlabelled and unnamed; focus escapes the dialog; Escape does nothing.
+DEF-6 · Mobile menu has no dialog semantics and 16 px-tall tap targets
+Type
+bug
+Summary
+On mobile the navigation panel opens without role=dialog or aria-modal, and the trigger exposes no aria-expanded/aria-controls, so assistive technology cannot detect the state change. Menu links measure 16 px in height (guideline: 44 px), and several icon buttons measure 24×24 / 25×25 with testimonial dots at 20×6. Root cause (confidence: High): the panel is a plain div toggled by local state with no ARIA wiring and no minimum target sizing.
+Severity
+Medium
+Priority
+Medium
+Frequency
+Always
+Platform
+Mobile web, 390×844 (iPhone-class viewport), Chromium 139 with touch emulation
+Feature area
+Mobile navigation / Accessibility
+Source
+Live black-box browser audit, 2026-11-10 — mobile viewport DOM + geometry measurement
+Evidence
+Panel role=null, aria-modal=null; trigger aria-expanded=null, aria-controls=null; menu link heights 16 px; icon buttons 25×25, 24×24, 24×24, 28×28; testimonial dots 76×6 and 20×6; trigger itself 40×40 at x=321,y=779.
+Steps to reproduce
+Open https://heydot.ai.studio/ at 390×844
+Tap the menu button at the bottom-right
+Inspect the opened panel — no role, no aria-modal
+Inspect the trigger — no aria-expanded
+Measure a menu link — 16 px tall
+Expected
+Panel exposes role="dialog" (or a labelled nav landmark) with aria-modal, the trigger toggles aria-expanded, and every interactive target is at least 44×44 px.
+Actual
+No dialog semantics, no expanded state, 16 px-tall links and multiple sub-44 px icon buttons.
+DEF-7 · Hero "AI prompt" widget is a non-interactive mock
+Type
+bug
+Summary
+The chat-style prompt card in the "Why choose us" section presents Attach, voice and generate controls but contains no input, textarea or contenteditable element; the prompt text is a static span with a blinking caret. Clicking submit changes only the placeholder string and issues no request. Root cause (confidence: High): the widget is a static visual mock rendered with interactive affordances.
+Severity
+Medium
+Priority
+Low
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139, 1440×900
+Feature area
+Landing page / Product demo widget
+Source
+Live black-box browser audit, 2026-11-10 — DOM inspection + click/type interaction
+Evidence
+form contains 0 input, 0 textarea, 0 [contenteditable]; 1 div.cursor-text; submit click → form text "How" becomes "How can we ", 0 network requests; typing produces no change.
+Steps to reproduce
+Open https://heydot.ai.studio/
+Scroll to "Driving Business Growth with Intelligent Automation"
+Click into the prompt card and type
+Click the generate/submit button
+Expected
+Either the widget accepts input and responds, or it is presented as a non-interactive illustration (no buttons, no caret, no cursor:text).
+Actual
+No editable element exists; typing does nothing; submit changes only placeholder text and sends no request.
+DEF-8 · 62 content images with empty alt; no skip link; no social/SEO metadata
+Type
+bug
+Summary
+202 images render with 0 broken and 0 missing alt, but 62 carry alt="" including large decorative SVGs up to 1,158 px wide. The page has no skip-to-content link, 0 aria-live regions (so form success and validation messages are never announced), 5 unlabelled nav landmarks, and no canonical, og:image, twitter:image or JSON-LD. Root cause (confidence: High): decorative-alt applied indiscriminately plus missing metadata authoring.
+Severity
+Low
+Priority
+Low
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139, 1440×900
+Feature area
+Accessibility / SEO metadata
+Source
+Live black-box browser audit, 2026-11-10 — DOM audit
+Evidence
+imgNoAlt 0, imgEmptyAlt 62, largest empty-alt SVG 1158×252; skipLink false; ariaLive 0; navs 5, mains 1; canonical null, ogImage null, twitterImage null, structuredData 0; h1 count 1, no heading skips.
+Steps to reproduce
+Open https://heydot.ai.studio/
+Run an accessibility audit (axe or Lighthouse)
+Filter images with alt="" and width > 80 px
+Check the document head for canonical / og:image / JSON-LD
+Expected
+Meaningful images carry descriptive alt; a skip link exists; form feedback is announced via aria-live; canonical and social preview metadata are present.
+Actual
+62 empty-alt images including large ones; no skip link; no aria-live; no canonical, og:image or structured data.
+DEF-9 · Copy defects: "BOOK A INTRO CALL", identical blog dates, dead footer video
+Type
+bug
+Summary
+Hero secondary CTA reads "BOOK A INTRO CALL" (grammar: "AN"). All three blog cards are dated "Nov 19, 2025". The footer video element has no source and never plays. Root cause (confidence: High for the string and date defects — directly observed; the video cause is covered by DEF-3).
+Severity
+Low
+Priority
+Low
+Frequency
+Always
+Platform
+Production web, https://heydot.ai.studio/ — Chromium 139, 1440×900
+Feature area
+Content / Copy
+Source
+Live black-box browser audit, 2026-11-10 — text extraction
+Evidence
+body text contains "BOOK A INTRO CALL" (bookAnIntro=false); blog dates ["Nov 19, 2025","Nov 19, 2025","Nov 19, 2025"]; footer video 0 source children, readyState 0.
+Steps to reproduce
+Open https://heydot.ai.studio/
+Read the hero secondary CTA
+Scroll to "Insights on AI and Automation" and compare the three post dates
+Scroll to the footer and inspect the video element
+Expected
+"BOOK AN INTRO CALL"; distinct publication dates per post; a footer video that plays or a still image instead.
+Actual
+"BOOK A INTRO CALL"; all three posts dated Nov 19, 2025; footer video has no source.
+Data sources & queries
+Source	State	Evidence / limitation
+Live site (browser)	Used — primary	Chromium 139 via Playwright; 9 passes at 1440×900, 768×1024 and 390×844; console, pageerror, requestfailed and HTTP-status listeners attached on every page.
+PostHog	not needed	This is a third-party public site, not a Teamily property — no project telemetry exists for it. All findings are black-box observations.
+Langfuse	not needed	No agent-execution chain is involved in this analysis.
+GitHub	not needed	No issue history was read; nothing was filed, edited or closed. DEF blocks below are payload text only.
+User-provided materials	user-provided	The only input was the URL https://heydot.ai.studio/.
+Audit trail. This analysis is based on user-provided data only — the single input was the URL https://heydot.ai.studio/. No machine telemetry source (PostHog / Langfuse / GitHub) was queried, so there is no queries.jsonl audit file for this run; the raw capture files (audit1.json … audit9.json) and screenshots are retained in the analysis workspace. No backend or server-side view was available.
+
+What could not be observed. No backend or server logs, no source repository, no analytics, no CRM or email-service configuration, and no access to the form's intended destination — so DEF-1's mechanism is proven at the browser boundary (zero requests) but the intended transport cannot be named. Only Chromium was exercised: Safari/iOS and Firefox behaviour, real-device touch, and screen-reader output (NVDA/VoiceOver) were not tested. Colour-contrast measurement returned no failures but is treated as inconclusive, since computed background colours on this page are layered gradients and translucent overlays. No authenticated or gated flows exist on the site, so none were tested. Lab performance numbers are single-run, cold-cache, from a cloud sandbox — field data (CrUX/RUM) was not available.
