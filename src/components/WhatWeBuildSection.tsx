@@ -195,17 +195,17 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
   const activeComparisonRow = hoveredRowIdx !== null ? hoveredRowIdx : autoRowIdx;
 
   return (
-    <section id="solutions" className="max-w-[1200px] mx-auto px-5 py-16 space-y-24 scroll-mt-20">
+    <section id="solutions" className="max-w-[1200px] mx-auto px-4 sm:px-5 py-14 sm:py-16 space-y-20 sm:space-y-24 scroll-mt-20 overflow-hidden">
       {/* ====================================================================
           PART 1: WHAT WE BUILD — Custom AI agents designed around your workflows
           ==================================================================== */}
       <div>
         {/* Header Row with Title on Left and "Book a Free Strategy Call [->]" on Right */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10"
         >
           <div>
@@ -259,20 +259,18 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
             return (
               <motion.div
                 key={agent.id}
-                initial={{ opacity: 0, x: -24, y: 12 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{
-                  type: 'spring',
-                  bounce: 0.18,
-                  duration: 0.6,
-                  delay: idx * 0.06,
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: idx * 0.05,
                 }}
-                whileHover={{ y: -4, x: 4 }}
                 onMouseEnter={() => setHoveredAgentId(agent.id)}
                 onMouseLeave={() => setHoveredAgentId(null)}
                 onClick={() => onOpenContact(agent.title)}
-                className="premium-interactive-card group relative rounded-[16px] border border-white/[0.08] hover:border-[#8b5cf6]/55 bg-gradient-to-r from-[#111522]/95 via-[#0e121d]/95 to-[#121625]/95 px-5 py-5 sm:px-7 sm:py-6 shadow-[0_12px_34px_rgba(0,0,0,0.45)] hover:shadow-[0_18px_48px_rgba(124,58,237,0.22)] transition-all duration-300 cursor-pointer overflow-hidden"
+                className="premium-interactive-card group relative rounded-[16px] border border-white/[0.08] hover:border-[#8b5cf6]/55 bg-gradient-to-r from-[#111522]/95 via-[#0e121d]/95 to-[#121625]/95 px-5 py-5 sm:px-7 sm:py-6 shadow-[0_12px_34px_rgba(0,0,0,0.45)] hover:shadow-[0_18px_48px_rgba(124,58,237,0.22)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 {/* Subtle left-to-right violet hover wash */}
                 <div
@@ -350,18 +348,17 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           {/* LEFT CARD: The Problems */}
           <motion.div
-            initial={{ opacity: 0, x: -24, y: 20 }}
-            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -5 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.65 }}
-            className="premium-interactive-card rounded-[18px] border border-white/[0.08] bg-[#0e121e]/95 p-5 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.55)] flex flex-col"
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="premium-interactive-card rounded-[18px] border border-white/[0.08] bg-[#0e121e]/95 p-5 sm:p-7 shadow-[0_20px_50px_rgba(0,0,0,0.55)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
           >
-            <div className="flex items-center justify-between mb-5 px-1">
+            <div className="flex items-center justify-between gap-2 mb-5 px-1">
               <h3 className="text-[19px] sm:text-[21px] font-medium text-[#d5dce6] tracking-[-0.02em]">
                 The Problems
               </h3>
-              <span className="px-2.5 py-1 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/30 font-mono-tech text-[10px] uppercase tracking-wider text-[#f87171]">
+              <span className="px-2.5 py-1 rounded-full bg-[#ef4444]/15 border border-[#ef4444]/30 font-mono-tech text-[10px] uppercase tracking-wider text-[#f87171] shrink-0">
                 MANUAL BOTTLENECKS
               </span>
             </div>
@@ -374,16 +371,16 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
                     key={problem}
                     onMouseEnter={() => setHoveredRowIdx(idx)}
                     onMouseLeave={() => setHoveredRowIdx(null)}
-                    className={`flex items-center gap-3.5 px-4 sm:px-5 py-4 text-[13.5px] sm:text-[14px] transition-all duration-300 cursor-default ${
+                    className={`flex items-center gap-3.5 px-4 sm:px-5 py-4 text-[13.5px] sm:text-[14px] transition-colors duration-300 cursor-default ${
                       isRowActive
-                        ? 'bg-[#1b2033] text-[#edf0f5] translate-x-1'
+                        ? 'bg-[#1b2033] text-[#edf0f5]'
                         : 'text-[#9ca5b5]'
                     }`}
                   >
                     <span
-                      className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold shrink-0 transition-all duration-300 ${
+                      className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold shrink-0 transition-colors duration-300 ${
                         isRowActive
-                          ? 'bg-[#ef4444]/20 text-[#f87171] scale-110'
+                          ? 'bg-[#ef4444]/20 text-[#f87171]'
                           : 'text-[#7c8496]'
                       }`}
                       aria-hidden="true"
@@ -397,14 +394,13 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
             </div>
           </motion.div>
 
-          {/* RIGHT CARD: The Outcome With AI Agents (Rich Royal Purple Gradient Stage in BOTH Dark & Light Mode) */}
+          {/* RIGHT CARD: The Outcome With AI Agents */}
           <motion.div
-            initial={{ opacity: 0, x: 24, y: 20 }}
-            whileInView={{ opacity: 1, x: 0, y: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            whileHover={{ y: -5 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.65, delay: 0.08 }}
-            className="outcome-gradient-card relative rounded-[18px] border border-[#8b5cf6]/50 hover:border-[#a78bfa] p-5 sm:p-7 shadow-[0_24px_65px_rgba(109,40,217,0.35)] hover:shadow-[0_28px_75px_rgba(124,58,237,0.48)] flex flex-col overflow-hidden transition-all duration-300"
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
+            className="outcome-gradient-card relative rounded-[18px] border border-[#8b5cf6]/50 hover:border-[#a78bfa] p-5 sm:p-7 shadow-[0_24px_65px_rgba(109,40,217,0.35)] hover:shadow-[0_28px_75px_rgba(124,58,237,0.48)] hover:-translate-y-1 flex flex-col overflow-hidden transition-all duration-300"
             style={{
               background:
                 'linear-gradient(180deg, #070814 0%, #1d1654 38%, #5b3df5 78%, #a78bfa 100%)',
@@ -419,11 +415,11 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
               }}
             />
 
-            <div className="relative z-10 flex items-center justify-between mb-5 px-1">
+            <div className="relative z-10 flex items-center justify-between gap-2 mb-5 px-1">
               <h3 className="outcome-card-heading text-[19px] sm:text-[21px] font-semibold text-white tracking-[-0.02em]">
                 The Outcome With AI Agents
               </h3>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 border border-white/25 font-mono-tech text-[10px] uppercase tracking-wider text-white">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 border border-white/25 font-mono-tech text-[10px] uppercase tracking-wider text-white shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-ping" />
                 AUTONOMOUS SCALE
               </span>
@@ -437,15 +433,15 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
                     key={outcome}
                     onMouseEnter={() => setHoveredRowIdx(idx)}
                     onMouseLeave={() => setHoveredRowIdx(null)}
-                    className={`outcome-card-row flex items-center gap-3.5 px-4 sm:px-5 py-4 text-[13.5px] sm:text-[14px] font-medium transition-all duration-300 cursor-default ${
+                    className={`outcome-card-row flex items-center gap-3.5 px-4 sm:px-5 py-4 text-[13.5px] sm:text-[14px] font-medium transition-colors duration-300 cursor-default ${
                       isRowActive
-                        ? 'bg-white/[0.14] text-white translate-x-1.5'
+                        ? 'bg-white/[0.16] text-white'
                         : 'text-white/90'
                     }`}
                   >
                     <svg
-                      className={`outcome-card-icon w-4.5 h-4.5 shrink-0 transition-transform duration-300 ${
-                        isRowActive ? 'text-[#c4b5fd] scale-115' : 'text-white/85'
+                      className={`outcome-card-icon w-4.5 h-4.5 shrink-0 transition-colors duration-300 ${
+                        isRowActive ? 'text-[#c4b5fd]' : 'text-white/85'
                       }`}
                       viewBox="0 0 24 24"
                       fill="none"

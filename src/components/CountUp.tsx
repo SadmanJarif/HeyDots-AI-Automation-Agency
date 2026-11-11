@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { animate, useInView } from 'motion/react';
 
 interface CountUpProps {
@@ -8,48 +8,46 @@ interface CountUpProps {
   suffix?: string;
   duration?: number;
   className?: string;
-  /** Re-run the count every N ms to keep the number alive (0 = once) */
+  /** Kept for backwards compatibility */
   loopMs?: number;
 }
 
-/** Number that counts up when scrolled into view (and optionally replays). */
+/**
+ * High-performance counter that updates textContent directly in the DOM
+ * without triggering React component re-renders on every animation frame.
+ */
 export const CountUp: React.FC<CountUpProps> = ({
   to,
   decimals = 0,
   prefix = '',
   suffix = '',
-  duration = 1.8,
+  duration = 1.6,
   className,
-  loopMs = 0,
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { amount: 0.4 });
-  const [value, setValue] = useState(0);
-  const [cycle, setCycle] = useState(0);
+  const inView = useInView(ref, { once: true, amount: 0.35 });
 
   useEffect(() => {
-    if (!inView || !loopMs) return;
-    const t = window.setInterval(() => setCycle((c) => c + 1), loopMs);
-    return () => window.clearInterval(t);
-  }, [inView, loopMs]);
+    const el = ref.current;
+    if (!el || !inView) return;
 
-  useEffect(() => {
-    if (!inView) {
-      setValue(0);
-      return;
-    }
     const controls = animate(0, to, {
       duration,
-      ease: 'easeOut',
-      onUpdate: (v) => setValue(v),
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => {
+        if (ref.current) {
+          ref.current.textContent = `${prefix}${v.toFixed(decimals)}${suffix}`;
+        }
+      },
     });
+
     return () => controls.stop();
-  }, [inView, to, duration, cycle]);
+  }, [inView, to, decimals, prefix, suffix, duration]);
 
   return (
     <span ref={ref} className={className}>
       {prefix}
-      {value.toFixed(decimals)}
+      {(0).toFixed(decimals)}
       {suffix}
     </span>
   );

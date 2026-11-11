@@ -71,17 +71,17 @@ export const ComparisonAndTransformationSection: React.FC<
   const activeRow = hoveredRow !== null ? hoveredRow : autoRowIdx;
 
   return (
-    <section className="max-w-[1200px] mx-auto px-5 py-20 space-y-28">
+    <section className="max-w-[1200px] mx-auto px-4 sm:px-5 py-16 sm:py-20 space-y-20 sm:space-y-28 overflow-hidden">
       {/* ====================================================================
           PART 1: WHY CHOOSE US — HeyDots vs Competitor Comparison
           ==================================================================== */}
       <div>
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7 }}
-          className="flex flex-col items-center text-center mb-14"
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="flex flex-col items-center text-center mb-12 sm:mb-14"
         >
           <span className="inline-flex items-center px-3.5 py-1 rounded-full bg-[#0f1d3d] border border-[#3b82f6]/40 text-[11.5px] font-medium text-[#93c5fd] shadow-[0_0_20px_rgba(59,130,246,0.25)] mb-4">
             Why Choose Us
@@ -106,12 +106,11 @@ export const ComparisonAndTransformationSection: React.FC<
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           {/* LEFT CARD: HeyDots (Blue Glowing Card) */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.7 }}
-            whileHover={{ y: -4 }}
-            className="relative rounded-[18px] border border-[#2563eb]/50 bg-gradient-to-b from-[#0b1938]/95 via-[#071024]/95 to-[#060a17]/95 overflow-hidden shadow-[0_20px_60px_rgba(37,99,235,0.18)] flex flex-col"
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            className="relative rounded-[18px] border border-[#2563eb]/50 bg-gradient-to-b from-[#0b1938]/95 via-[#071024]/95 to-[#060a17]/95 overflow-hidden shadow-[0_20px_60px_rgba(37,99,235,0.18)] hover:-translate-y-1 transition-transform duration-300 flex flex-col"
           >
             {/* Subtle top-left blue radial spotlight */}
             <div
@@ -123,7 +122,7 @@ export const ComparisonAndTransformationSection: React.FC<
             />
 
             {/* Card Header */}
-            <div className="relative z-10 p-6 sm:p-7 border-b border-[#1e3a8a]/40">
+            <div className="relative z-10 p-5 sm:p-7 border-b border-[#1e3a8a]/40">
               <div className="flex items-center gap-2.5 mb-3">
                 <span className="w-7 h-7 rounded-[8px] bg-[#1d4ed8]/30 border border-[#3b82f6]/50 flex items-center justify-center text-[#60a5fa] shadow-[0_0_14px_rgba(59,130,246,0.4)]">
                   <svg
@@ -160,9 +159,9 @@ export const ComparisonAndTransformationSection: React.FC<
                     key={item}
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
-                    className={`flex items-center gap-3.5 px-6 sm:px-7 py-4 text-[13px] sm:text-[13.5px] transition-all duration-300 ${
+                    className={`flex items-center gap-3.5 px-5 sm:px-7 py-4 text-[13px] sm:text-[13.5px] transition-colors duration-300 ${
                       isActive
-                        ? 'comparison-advantage-active bg-[#1e3a8a]/25 text-white translate-x-1.5'
+                        ? 'comparison-advantage-active bg-[#1e3a8a]/25 text-white'
                         : 'text-[#d5dce6]'
                     }`}
                   >
@@ -190,12 +189,11 @@ export const ComparisonAndTransformationSection: React.FC<
 
           {/* RIGHT CARD: Competitor (Red/Crimson Glowing Card) */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.7, delay: 0.08 }}
-            whileHover={{ y: -4 }}
-            className="relative rounded-[18px] border border-[#dc2626]/40 bg-gradient-to-b from-[#230b12]/90 via-[#12070c]/95 to-[#08060c]/95 overflow-hidden shadow-[0_20px_60px_rgba(220,38,38,0.12)] flex flex-col"
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
+            className="relative rounded-[18px] border border-[#dc2626]/40 bg-gradient-to-b from-[#230b12]/90 via-[#12070c]/95 to-[#08060c]/95 overflow-hidden shadow-[0_20px_60px_rgba(220,38,38,0.12)] hover:-translate-y-1 transition-transform duration-300 flex flex-col"
           >
             {/* Subtle top-right crimson spotlight */}
             <div
@@ -207,7 +205,7 @@ export const ComparisonAndTransformationSection: React.FC<
             />
 
             {/* Card Header */}
-            <div className="relative z-10 p-6 sm:p-7 border-b border-[#7f1d1d]/35">
+            <div className="relative z-10 p-5 sm:p-7 border-b border-[#7f1d1d]/35">
               <div className="flex items-center gap-2.5 mb-3">
                 <h3 className="text-[20px] font-semibold text-[#f3f5fa] tracking-[-0.02em]">
                   Competitor
@@ -228,9 +226,9 @@ export const ComparisonAndTransformationSection: React.FC<
                     key={item}
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
-                    className={`flex items-center gap-3.5 px-6 sm:px-7 py-4 text-[13px] sm:text-[13.5px] transition-all duration-300 ${
+                    className={`flex items-center gap-3.5 px-5 sm:px-7 py-4 text-[13px] sm:text-[13.5px] transition-colors duration-300 ${
                       isActive
-                        ? 'comparison-drawback-active bg-[#7f1d1d]/20 text-[#f3f5fa] translate-x-1.5'
+                        ? 'comparison-drawback-active bg-[#7f1d1d]/20 text-[#f3f5fa]'
                         : 'text-[#aeb5c0]'
                     }`}
                   >

@@ -30,9 +30,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookC
 
         {/* Kicker with flanking fade lines */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.65, delay: 0.05 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.04 }}
           className="mb-4"
         >
           <SectionKicker text="AI EXPERTS FOR MODERN BUSINESSES" />
@@ -40,20 +40,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookC
 
         {/* Main H1 Display Heading */}
         <motion.h1
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7, delay: 0.1 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
           className="text-clavion-gradient font-medium tracking-[-0.03em] leading-[1.12] max-w-[680px] mb-5"
-          style={{ fontSize: 'clamp(2.5rem, 5vw, 4.1rem)', textWrap: 'balance' }}
+          style={{ fontSize: 'clamp(2.25rem, 5vw, 4.1rem)', textWrap: 'balance' }}
         >
           Shaping the Future of Work with AI
         </motion.h1>
 
         {/* Subtitle */}
         <motion.p
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7, delay: 0.16 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.13 }}
           className="text-[#aeb5c0] text-[15px] sm:text-[16px] leading-[1.6] max-w-[490px] mb-8"
         >
           We create intelligent AI ecosystems that streamline daily work and scale long-term performance.
@@ -61,12 +61,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookC
 
         {/* Primary & Secondary CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7, delay: 0.22 }}
-          className="flex flex-col items-center gap-3 mb-20"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.18 }}
+          className="flex flex-col items-center gap-3 mb-16 sm:mb-20 w-full sm:w-auto"
         >
-          <div className="flex flex-wrap items-center justify-center gap-3.5">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 w-full sm:w-auto">
             <RainbowButton
               label="START A PROJECT"
               variant="rainbow"
@@ -86,9 +86,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookC
 
         {/* Trusted by forward-thinking brands */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.75, delay: 0.28 }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: 0.24 }}
           className="w-full max-w-[780px] flex flex-col items-center"
         >
           <p className="text-[12px] text-[#aeb5c0] mb-5 tracking-wide">

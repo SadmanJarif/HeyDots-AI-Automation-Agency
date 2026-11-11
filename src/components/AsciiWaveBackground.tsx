@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { computeAsciiWaveCell } from '../utils/clavionLogic';
+import React, { useEffect, useRef } from 'react';
 
 interface AsciiWaveBackgroundProps {
   className?: string;
@@ -7,47 +6,109 @@ interface AsciiWaveBackgroundProps {
   rows?: number;
 }
 
+const WAVE_CHARS = [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@'];
+
+/**
+ * Lightweight GPU-friendly Canvas ASCII Wave Background.
+ * Avoids 800+ React DOM node updates every 250ms and pauses automatically when off-screen.
+ */
 export const AsciiWaveBackground: React.FC<AsciiWaveBackgroundProps> = ({
   className = '',
-  cols = 58,
-  rows = 14,
+  cols = 52,
+  rows = 12,
 }) => {
-  const [tick, setTick] = useState(0);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const timer = window.setInterval(() => {
-      setTick((t) => (t + 1) % 1000);
-    }, 250);
-    return () => window.clearInterval(timer);
-  }, []);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let rafId = 0;
+    let isVisible = false;
+    let phase = 0;
+    let lastDraw = 0;
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+    };
+
+    const draw = (now: number) => {
+      if (!isVisible) return;
+      if (now - lastDraw >= 95) {
+        lastDraw = now;
+        resize();
+        const w = canvas.width;
+        const h = canvas.height;
+        ctx.clearRect(0, 0, w, h);
+        ctx.font = '12px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const cellW = w / cols;
+        const cellH = h / rows;
+
+        for (let r = 0; r < rows; r++) {
+          const ny = (r / Math.max(1, rows - 1)) * 2 - 1;
+          for (let c = 0; c < cols; c++) {
+            const nx = (c / Math.max(1, cols - 1)) * 2 - 1;
+            const wave =
+              Math.sin(nx * 3.8 + phase) * 0.5 +
+              Math.cos(ny * 2.6 - phase * 0.7) * 0.5;
+            const intensity = Math.max(0, Math.min(1, (wave + 1) * 0.5));
+            const charIdx = Math.min(
+              WAVE_CHARS.length - 1,
+              Math.floor(intensity * WAVE_CHARS.length)
+            );
+            const char = WAVE_CHARS[charIdx];
+            if (char !== ' ') {
+              const alpha = (0.04 + intensity * 0.14).toFixed(2);
+              ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+              ctx.fillText(char, (c + 0.5) * cellW, (r + 0.5) * cellH);
+            }
+          }
+        }
+        phase += 0.12;
+      }
+      rafId = window.requestAnimationFrame(draw);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          cancelAnimationFrame(rafId);
+          rafId = window.requestAnimationFrame(draw);
+        } else {
+          cancelAnimationFrame(rafId);
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(rafId);
+    };
+  }, [cols, rows]);
 
   return (
     <div
       className={`ascii-wave-container relative overflow-hidden select-none pointer-events-none bg-[#0a0d14] ${className}`}
       aria-hidden="true"
     >
-      <div
-        className="w-full h-full grid font-mono-tech text-[13px] leading-[18px] tracking-widest text-center"
-        style={{
-          gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
-        }}
-      >
-        {Array.from({ length: rows }).map((_, r) =>
-          Array.from({ length: cols }).map((__, c) => {
-            const { char, intensity } = computeAsciiWaveCell(c, r, cols, rows, tick);
-            const opacity = (0.04 + intensity * 0.14).toFixed(3);
-            return (
-              <span
-                key={`${r}-${c}`}
-                className="ascii-wave-glyph"
-                style={{ opacity }}
-              >
-                {char}
-              </span>
-            );
-          })
-        )}
-      </div>
+      <canvas ref={canvasRef} className="w-full h-full block" />
 
       {/* Top, Bottom, and Radial Vignette Overlays matching Clavion */}
       <div

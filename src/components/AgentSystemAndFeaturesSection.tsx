@@ -191,32 +191,26 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
   const activeCapIdx = hoveredCapabilityIdx !== null ? hoveredCapabilityIdx : autoCapIdx;
 
   return (
-    <section className="max-w-[1200px] mx-auto px-5 py-20 space-y-28">
+    <section className="max-w-[1200px] mx-auto px-4 sm:px-5 py-16 sm:py-20 space-y-20 sm:space-y-28 overflow-hidden">
       {/* ====================================================================
           SECTION 1A: WHAT WE MEAN BY "AI AGENT"
           ==================================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         {/* Left Visual Card: Deep Midnight -> Electric Royal Purple -> Lavender Gradient Stage */}
         <motion.div
-          initial={{ opacity: 0, x: -28, y: 20 }}
-          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.75 }}
-          whileHover={{ y: -6, scale: 1.01 }}
-          className="agent-stage-gradient lg:col-span-6 relative rounded-[22px] p-6 sm:p-10 min-h-[390px] sm:min-h-[440px] flex flex-col items-center justify-center overflow-hidden border border-[#8b5cf6]/50 hover:border-[#a78bfa] shadow-[0_24px_70px_rgba(109,40,217,0.34)] hover:shadow-[0_30px_80px_rgba(124,58,237,0.48)] transition-all duration-300"
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="agent-stage-gradient lg:col-span-6 relative rounded-[22px] p-5 sm:p-10 min-h-[370px] sm:min-h-[440px] flex flex-col items-center justify-center overflow-hidden border border-[#8b5cf6]/50 hover:border-[#a78bfa] shadow-[0_24px_70px_rgba(109,40,217,0.34)] hover:shadow-[0_30px_80px_rgba(124,58,237,0.48)] hover:-translate-y-1 transition-all duration-300"
           style={{
             background:
               'linear-gradient(180deg, #070814 0%, #1d1559 36%, #5b3df5 72%, #c4b5fd 100%)',
           }}
         >
-          {/* Animated Ambient Radial Glow */}
-          <motion.div
-            animate={{
-              scale: [1, 1.12, 1],
-              opacity: [0.65, 0.9, 0.65],
-            }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-36"
+          {/* Ambient Radial Glow */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-36 opacity-75"
             style={{
               background:
                 'radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 75%)',
@@ -226,16 +220,12 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
           <div className="relative z-10 w-full max-w-[395px] flex flex-col items-center">
             {/* AgentOS / HeyDots Header Badge */}
             <div className="flex items-center gap-2.5 mb-5">
-              <motion.div
-                animate={{ rotate: [0, 8, -8, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                className="w-7 h-7 rounded-[8px] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.3)] flex items-center justify-center text-[#5b3df5]"
-              >
+              <div className="w-7 h-7 rounded-[8px] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.3)] flex items-center justify-center text-[#5b3df5]">
                 <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <path d="M12 3a9 9 0 1 0 9 9c0-1.5-.4-2.9-1-4.1" strokeLinecap="round" />
                   <circle cx="12" cy="12" r="3.5" />
                 </svg>
-              </motion.div>
+              </div>
               <span className="agent-os-badge-text font-mono-tech text-[15px] sm:text-[16px] font-medium text-white tracking-tight">
                 AgentOS <span className="font-pacifico text-[#ede9fe] ml-0.5">HeyDots</span>:
               </span>
@@ -245,34 +235,22 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
               </span>
             </div>
 
-            {/* 4 White Pill Checklist Bars with Live Cycling & Hover Slide */}
+            {/* 4 White Pill Checklist Bars with Smooth CSS Highlight */}
             <div className="w-full flex flex-col gap-2.5">
               {AGENT_OS_CAPABILITIES.map((item, idx) => {
                 const isActive = activeCapIdx === idx;
                 return (
-                  <motion.div
+                  <div
                     key={item}
-                    initial={{ opacity: 0, x: -16 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    animate={{
-                      x: isActive ? 6 : 0,
-                      scale: isActive ? 1.02 : 1,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 260,
-                      damping: 22,
-                    }}
                     onMouseEnter={() => setHoveredCapabilityIdx(idx)}
                     onMouseLeave={() => setHoveredCapabilityIdx(null)}
-                    className={`w-full rounded-[10px] bg-white px-4 py-3 flex items-center justify-between gap-3 transition-shadow duration-300 cursor-default ${
+                    className={`w-full rounded-[10px] bg-white px-3.5 sm:px-4 py-3 flex items-center justify-between gap-3 transition-all duration-300 ease-out cursor-default ${
                       isActive
-                        ? 'shadow-[0_12px_30px_rgba(15,23,42,0.38)] ring-2 ring-[#a78bfa]'
-                        : 'shadow-[0_8px_22px_rgba(10,13,20,0.22)] opacity-95'
+                        ? 'shadow-[0_12px_30px_rgba(15,23,42,0.38)] ring-2 ring-[#a78bfa] translate-x-1'
+                        : 'shadow-[0_8px_22px_rgba(10,13,20,0.22)] opacity-95 translate-x-0'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${
                           isActive ? 'bg-[#5b3df5] text-white' : 'bg-[#ede9fe] text-[#5b3df5]'
@@ -288,16 +266,16 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
                           <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </span>
-                      <span className="font-mono-tech text-[11.5px] sm:text-[12.5px] text-[#0f172a] font-medium tracking-[-0.01em]">
+                      <span className="font-mono-tech text-[11px] sm:text-[12.5px] text-[#0f172a] font-medium tracking-[-0.01em] truncate">
                         {item}
                       </span>
                     </div>
                     <span
-                      className={`w-1.5 h-1.5 rounded-full transition-opacity duration-300 ${
+                      className={`w-1.5 h-1.5 rounded-full shrink-0 transition-opacity duration-300 ${
                         isActive ? 'bg-[#5b3df5] opacity-100' : 'opacity-0'
                       }`}
                     />
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -306,10 +284,10 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
 
         {/* Right Copy Column */}
         <motion.div
-          initial={{ opacity: 0, x: 28, y: 20 }}
-          whileInView={{ opacity: 1, x: 0, y: 0 }}
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.75, delay: 0.08 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
           className="lg:col-span-6 flex flex-col items-start"
         >
           <p className="font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9ca5b5] mb-3.5">
@@ -409,17 +387,16 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* CARD 1: Lead qualification and routing */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.65 }}
-            whileHover={{ y: -6 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             onMouseEnter={() => setHoveredFeatureIdx(0)}
             onMouseLeave={() => setHoveredFeatureIdx(null)}
             onClick={() => onOpenContact('Lead Qualification & Routing Agent')}
-            className="premium-interactive-card group rounded-[18px] border border-white/12 hover:border-[#8b5cf6]/60 bg-[#0e121e]/95 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_24px_60px_rgba(109,40,217,0.28)] transition-all duration-300 flex flex-col cursor-pointer"
+            className="premium-interactive-card group rounded-[18px] border border-white/12 hover:border-[#8b5cf6]/60 bg-[#0e121e]/95 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_24px_60px_rgba(109,40,217,0.28)] hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
           >
-            {/* Gradient Visual Stage (Rich Royal Purple in Both Dark & Light Mode) */}
+            {/* Gradient Visual Stage */}
             <div
               className="agent-stage-gradient relative h-[250px] p-5 flex items-center justify-center overflow-hidden"
               style={{
@@ -432,17 +409,12 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
                   const isRowHighlighted =
                     hoveredFeatureIdx === 0 ? i === 1 || i === 2 : autoLeadIdx === i;
                   return (
-                    <motion.div
+                    <div
                       key={lead.name}
-                      animate={{
-                        x: isRowHighlighted ? 4 : 0,
-                        scale: isRowHighlighted ? 1.02 : 1,
-                      }}
-                      transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-                      className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-[9px] bg-white border transition-shadow ${
+                      className={`flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-[9px] bg-white border transition-all duration-300 ease-out ${
                         isRowHighlighted
-                          ? 'border-[#8b5cf6]/60 shadow-[0_4px_12px_rgba(91,61,245,0.18)]'
-                          : 'border-slate-100 shadow-xs'
+                          ? 'border-[#8b5cf6]/60 shadow-[0_4px_12px_rgba(91,61,245,0.18)] translate-x-1'
+                          : 'border-slate-100 shadow-xs translate-x-0'
                       }`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
@@ -462,7 +434,7 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
                         <span>{lead.badge}</span>
                         <span>{lead.emoji}</span>
                       </span>
-                    </motion.div>
+                    </div>
                   );
                 })}
               </div>
@@ -483,17 +455,16 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
 
           {/* CARD 2: Pipeline management */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.65, delay: 0.07 }}
-            whileHover={{ y: -6 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
             onMouseEnter={() => setHoveredFeatureIdx(1)}
             onMouseLeave={() => setHoveredFeatureIdx(null)}
             onClick={() => onOpenContact('Pipeline Management Agent')}
-            className="premium-interactive-card group rounded-[18px] border border-white/12 hover:border-[#8b5cf6]/60 bg-[#0e121e]/95 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_24px_60px_rgba(109,40,217,0.28)] transition-all duration-300 flex flex-col cursor-pointer"
+            className="premium-interactive-card group rounded-[18px] border border-white/12 hover:border-[#8b5cf6]/60 bg-[#0e121e]/95 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_24px_60px_rgba(109,40,217,0.28)] hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
           >
-            {/* Gradient Visual Stage (Rich Royal Purple in Both Dark & Light Mode) */}
+            {/* Gradient Visual Stage */}
             <div
               className="agent-stage-gradient relative h-[250px] p-5 flex items-center justify-center overflow-hidden"
               style={{
@@ -524,15 +495,17 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
                   </span>
                 </div>
 
-                {/* Floating Draggable Deal Card with Continuous Sliding Motion */}
-                <motion.div
-                  animate={{
-                    x: hoveredFeatureIdx === 1 ? 10 : kanbanPhase === 0 ? -18 : kanbanPhase === 1 ? 0 : 8,
-                    y: hoveredFeatureIdx === 1 ? -6 : kanbanPhase === 1 ? -3 : 0,
-                    rotate: hoveredFeatureIdx === 1 ? -2 : kanbanPhase === 0 ? 1.5 : -1,
-                  }}
-                  transition={{ type: 'spring', stiffness: 220, damping: 20 }}
-                  className="absolute right-3.5 bottom-4 w-[142px] rounded-[10px] bg-white border border-slate-200/90 p-2.5 shadow-[0_12px_28px_rgba(15,23,42,0.24)]"
+                {/* Floating Draggable Deal Card with Smooth CSS Transition */}
+                <div
+                  className={`absolute right-3.5 bottom-4 w-[142px] rounded-[10px] bg-white border border-slate-200/90 p-2.5 shadow-[0_12px_28px_rgba(15,23,42,0.24)] transition-transform duration-500 ease-out ${
+                    hoveredFeatureIdx === 1
+                      ? 'translate-x-1 -translate-y-1.5'
+                      : kanbanPhase === 0
+                      ? '-translate-x-3 translate-y-0'
+                      : kanbanPhase === 1
+                      ? 'translate-x-0 -translate-y-1'
+                      : 'translate-x-1.5 translate-y-0'
+                  }`}
                 >
                   <p className="text-[10px] font-semibold text-slate-800 mb-1">New Deal</p>
                   <div className="flex items-center gap-1 mb-2">
@@ -552,7 +525,7 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
                       <path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.37-.08-.76.04-1.03.31-.43.44-.43 1.14 0 1.58l4.01 4.01c.38.37.89.58 1.42.58h6.5c1 0 1.84-.73 1.98-1.72l.63-4.47c.12-.85-.32-1.69-1.24-1.94z" />
                     </svg>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
 
@@ -571,17 +544,16 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
 
           {/* CARD 3: Customer support and FAQ handling */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.65, delay: 0.14 }}
-            whileHover={{ y: -6 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
             onMouseEnter={() => setHoveredFeatureIdx(2)}
             onMouseLeave={() => setHoveredFeatureIdx(null)}
             onClick={() => onOpenContact('Customer Support & FAQ Agent')}
-            className="premium-interactive-card group rounded-[18px] border border-white/12 hover:border-[#8b5cf6]/60 bg-[#0e121e]/95 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_24px_60px_rgba(109,40,217,0.28)] transition-all duration-300 flex flex-col cursor-pointer"
+            className="premium-interactive-card group rounded-[18px] border border-white/12 hover:border-[#8b5cf6]/60 bg-[#0e121e]/95 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.5)] hover:shadow-[0_24px_60px_rgba(109,40,217,0.28)] hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
           >
-            {/* Gradient Visual Stage (Rich Royal Purple in Both Dark & Light Mode) */}
+            {/* Gradient Visual Stage */}
             <div
               className="agent-stage-gradient relative h-[250px] p-5 flex items-center justify-center overflow-hidden"
               style={{
@@ -591,32 +563,22 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
             >
               <div className="w-full max-w-[295px] rounded-[14px] bg-white p-3.5 shadow-[0_14px_34px_rgba(10,13,20,0.35)] flex flex-col gap-2">
                 <span className="text-[9.5px] font-medium text-slate-400">Customer</span>
-                <motion.div
-                  animate={{ x: hoveredFeatureIdx === 2 ? 3 : 0 }}
-                  className="self-start px-3 py-1.5 rounded-[10px] rounded-tl-xs bg-slate-100 text-[11px] font-medium text-slate-800"
-                >
+                <div className="self-start px-3 py-1.5 rounded-[10px] rounded-tl-xs bg-slate-100 text-[11px] font-medium text-slate-800 transition-transform duration-300 group-hover:translate-x-0.5">
                   How do I reset my password?
-                </motion.div>
-                <motion.div
-                  animate={{ x: hoveredFeatureIdx === 2 ? 5 : 0 }}
-                  transition={{ delay: 0.04 }}
-                  className="self-start px-3 py-1.5 rounded-[10px] rounded-tl-xs bg-slate-100 text-[11px] font-medium text-slate-800"
-                >
+                </div>
+                <div className="self-start px-3 py-1.5 rounded-[10px] rounded-tl-xs bg-slate-100 text-[11px] font-medium text-slate-800 transition-transform duration-300 group-hover:translate-x-1">
                   From the mobile app
-                </motion.div>
+                </div>
 
                 <div className="flex flex-col items-end mt-1">
                   <span className="text-[9.5px] font-medium text-slate-400 mb-1">Agent</span>
-                  <motion.div
-                    animate={{
-                      scale: hoveredFeatureIdx === 2 ? 1.05 : kanbanPhase === 1 ? 1.03 : 1,
-                      x: hoveredFeatureIdx === 2 ? -4 : 0,
-                    }}
-                    transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                    className="keep-white-text px-3.5 py-1.5 rounded-full bg-[#4f46e5] text-white text-[11px] font-medium shadow-[0_6px_16px_rgba(79,70,229,0.42)]"
+                  <div
+                    className={`keep-white-text px-3.5 py-1.5 rounded-full bg-[#4f46e5] text-white text-[11px] font-medium shadow-[0_6px_16px_rgba(79,70,229,0.42)] transition-transform duration-300 ${
+                      hoveredFeatureIdx === 2 || kanbanPhase === 1 ? '-translate-x-1' : 'translate-x-0'
+                    }`}
                   >
                     To reset your password...
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -660,25 +622,23 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {BENEFITS_GRID.map((benefit, idx) => {
             const isHovered = hoveredBenefitId === benefit.id;
             return (
               <motion.div
                 key={benefit.id}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{
-                  type: 'spring',
-                  bounce: 0.2,
-                  duration: 0.65,
-                  delay: idx * 0.05,
+                  duration: 0.5,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: idx * 0.04,
                 }}
-                whileHover={{ y: -6 }}
                 onMouseEnter={() => setHoveredBenefitId(benefit.id)}
                 onMouseLeave={() => setHoveredBenefitId(null)}
-                className="premium-interactive-card group relative rounded-[18px] border border-white/[0.08] hover:border-[#8b5cf6]/60 bg-[#0d111d]/85 hover:bg-[#111626] p-6 transition-all duration-300 shadow-[0_12px_34px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_52px_rgba(109,40,217,0.22)] overflow-hidden"
+                className="premium-interactive-card group relative rounded-[18px] border border-white/[0.08] hover:border-[#8b5cf6]/60 bg-[#0d111d]/85 hover:bg-[#111626] p-6 hover:-translate-y-1 transition-all duration-300 shadow-[0_12px_34px_rgba(0,0,0,0.35)] hover:shadow-[0_22px_52px_rgba(109,40,217,0.22)] overflow-hidden"
               >
                 {/* Bottom animated purple progress accent bar on hover */}
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-gradient-to-r from-[#5b3df5] via-[#8b5cf6] to-[#c4b5fd] scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />

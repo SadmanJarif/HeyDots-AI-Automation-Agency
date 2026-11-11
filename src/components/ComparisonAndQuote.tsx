@@ -14,17 +14,16 @@ export const ComparisonAndQuote: React.FC = () => {
   }, []);
 
   return (
-    <section id="architecture" className="max-w-[1200px] mx-auto px-5 py-10 scroll-mt-20">
+    <section id="architecture" className="max-w-[1200px] mx-auto px-4 sm:px-5 py-10 scroll-mt-20 overflow-hidden">
       {/* Problem vs Solution 2-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-14">
         {/* Left Card: [ DIY - QUICK HACKS ] */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          whileHover={{ y: -5 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7 }}
-          className="premium-interactive-card rounded-[18px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-6 sm:p-8 flex flex-col justify-between transition-all duration-300"
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="premium-interactive-card rounded-[18px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-5 sm:p-8 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300"
         >
           <div>
             <p className="font-mono-tech text-[12px] uppercase tracking-[0.08em] text-[#aeb5c0] mb-5">
@@ -101,12 +100,11 @@ export const ComparisonAndQuote: React.FC = () => {
 
         {/* Right Card: [ HeyDots - GUARDRAILS ] */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          whileHover={{ y: -5 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7, delay: 0.08 }}
-          className="premium-interactive-card rounded-[18px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-6 sm:p-8 flex flex-col justify-between transition-all duration-300"
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
+          className="premium-interactive-card rounded-[18px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-5 sm:p-8 flex flex-col justify-between hover:-translate-y-1 transition-all duration-300"
         >
           <div>
             <p className="font-mono-tech text-[12px] uppercase tracking-[0.08em] text-[#aeb5c0] mb-5 flex items-center gap-1.5">
@@ -234,11 +232,11 @@ export const ComparisonAndQuote: React.FC = () => {
 
       {/* Rated 5 Star Quote Banner with Dot-Grid Frame */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.25 }}
-        transition={{ type: 'spring', bounce: 0.2, duration: 0.7 }}
-        className="relative rounded-[18px] overflow-hidden py-12 px-6 flex flex-col items-center text-center border border-[#858b94]/20 bg-[#0c0f17]/60"
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        className="relative rounded-[18px] overflow-hidden py-10 sm:py-12 px-5 sm:px-6 flex flex-col items-center text-center border border-[#858b94]/20 bg-[#0c0f17]/60"
       >
         <img
           src="/assets/clavion/r5potKirfvn8BYMPvQoN9Zv2Ng.svg"

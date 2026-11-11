@@ -339,11 +339,10 @@ export const WhyChooseUsAndProcess: React.FC<WhyChooseUsAndProcessProps> = ({
               return (
                 <motion.div
                   key={step.id}
-                  initial={{ opacity: 0, y: 18 }}
+                  initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.2 }}
-                  whileHover={{ y: -4, x: 3 }}
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.65, delay: idx * 0.05 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: idx * 0.05 }}
                   onClick={() => handleStepToggle(step.id)}
                   role="button"
                   tabIndex={0}
@@ -354,7 +353,7 @@ export const WhyChooseUsAndProcess: React.FC<WhyChooseUsAndProcessProps> = ({
                       handleStepToggle(step.id);
                     }
                   }}
-                  className="premium-interactive-card rounded-[18px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-6 sm:p-7 transition-all duration-300 cursor-pointer text-left"
+                  className="premium-interactive-card rounded-[18px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-5 sm:p-7 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer text-left"
                 >
                   <p className="font-mono-tech text-[12px] text-[#aeb5c0] mb-3">{step.stepTag}</p>
                   <h3 className="text-[20px] sm:text-[22px] font-medium text-clavion-gradient mb-2">

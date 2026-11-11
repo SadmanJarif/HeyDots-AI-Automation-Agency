@@ -68,17 +68,17 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
 
         {/* 3-Card Tilted Stack Container matching Clavion's exact iuDv9ANKq component */}
         <div
-          className="max-w-[600px] mx-auto"
+          className="max-w-[600px] mx-auto px-2 sm:px-0"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          <div className="relative min-h-[395px] sm:min-h-[373px] flex items-center justify-center py-3">
+          <div className="relative min-h-[385px] sm:min-h-[373px] flex items-center justify-center py-3">
             {TESTIMONIALS.map((item, idx) => {
-              // Calculate relative offset: 0 = front active card, 1 = tilted +6deg back card, 2 = tilted -6deg back card
+              // Calculate relative offset: 0 = front active card, 1 = tilted +3deg back card, 2 = tilted -3deg back card
               const offset =
                 (idx - activeTestimonialIdx + TESTIMONIALS.length) % TESTIMONIALS.length;
               const isFront = offset === 0;
-              const rotateDeg = offset === 0 ? 0 : offset === 1 ? 6 : -6;
+              const rotateDeg = offset === 0 ? 0 : offset === 1 ? 3 : -3;
               const cardOpacity = offset === 0 ? 1 : offset === 1 ? 0.5 : 0.4;
               const zIndex = offset === 0 ? 30 : offset === 1 ? 20 : 10;
 
@@ -89,13 +89,12 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
                   animate={{
                     rotate: rotateDeg,
                     opacity: cardOpacity,
-                    scale: isFront ? 1 : 0.97,
-                    y: isFront ? 0 : 4,
+                    scale: isFront ? 1 : 0.96,
+                    y: isFront ? 0 : 6,
                   }}
                   transition={{
-                    type: 'spring',
-                    bounce: 0.2,
-                    duration: 0.5,
+                    duration: 0.45,
+                    ease: [0.22, 1, 0.36, 1],
                   }}
                   style={{ zIndex }}
                   onClick={() => {
@@ -103,7 +102,7 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
                   }}
                   className={`${
                     isFront ? 'relative' : 'absolute inset-x-0 top-3 cursor-pointer'
-                  } w-full rounded-[18px] border border-[#858b94]/25 bg-clavion-card p-6 sm:p-8 shadow-2xl select-none`}
+                  } w-full rounded-[18px] border border-[#858b94]/25 bg-clavion-card p-5 sm:p-8 shadow-2xl select-none`}
                 >
                   {/* Author Info */}
                   <div className="flex items-center gap-3.5 mb-5">
@@ -246,18 +245,17 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
             {FAQ_ITEMS.map((faq) => {
               const isOpen = openFaqIds.includes(faq.id);
               return (
-                <motion.div
+                <div
                   key={faq.id}
-                  whileHover={{ y: -3, x: 2 }}
-                  className="premium-interactive-card rounded-[14px] border border-[#858b94]/20 bg-clavion-card overflow-hidden transition-all duration-300 hover:border-[#8b5cf6]/50"
+                  className="premium-interactive-card rounded-[14px] border border-[#858b94]/20 bg-clavion-card overflow-hidden hover:-translate-y-0.5 transition-all duration-300 hover:border-[#8b5cf6]/50"
                 >
                   <button
                     type="button"
                     onClick={() => handleFaqToggle(faq.id)}
                     aria-expanded={isOpen}
-                    className="w-full px-6 py-5 flex items-center justify-between gap-4 text-left cursor-pointer"
+                    className="w-full px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-4 text-left cursor-pointer"
                   >
-                    <span className="text-[15px] font-medium text-[#edf0f5]">
+                    <span className="text-[14.5px] sm:text-[15px] font-medium text-[#edf0f5]">
                       {faq.question}
                     </span>
                     <img
@@ -278,13 +276,13 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
                         transition={{ duration: 0.25, ease: 'easeOut' }}
                         className="overflow-hidden"
                       >
-                        <div className="px-6 pb-5 pt-2 text-[14px] text-[#aeb5c0] leading-[1.6] border-t border-white/[0.05]">
+                        <div className="px-5 sm:px-6 pb-5 pt-2 text-[13.5px] sm:text-[14px] text-[#aeb5c0] leading-[1.6] border-t border-white/[0.05]">
                           {faq.answer}
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </motion.div>
+                </div>
               );
             })}
           </div>

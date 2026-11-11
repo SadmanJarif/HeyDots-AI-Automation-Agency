@@ -21,14 +21,14 @@ export const ManualProcessesSection: React.FC<ManualProcessesSectionProps> = ({
   const activeCard = hoveredCard !== null ? hoveredCard : autoPulseCard;
 
   return (
-    <section className="max-w-[1200px] mx-auto px-5 py-20">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+    <section className="max-w-[1200px] mx-auto px-4 sm:px-5 py-16 sm:py-20">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* LEFT STICKY COLUMN: Badge + Two-Tone Heading + Subtitle + CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.25 }}
-          transition={{ type: 'spring', bounce: 0.2, duration: 0.7 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           className="lg:col-span-5 lg:sticky lg:top-28 flex flex-col items-start"
         >
           {/* Small Circular 4-Point Star Badge */}
@@ -115,9 +115,10 @@ export const ManualProcessesSection: React.FC<ManualProcessesSectionProps> = ({
 
                 <div className="relative z-10 flex flex-col items-center gap-2.5 w-full max-w-[235px]">
                   {/* Pill 1: Lead Captured -> Completed */}
-                  <motion.div
-                    animate={{ x: activeCard === 0 ? 4 : 0 }}
-                    className="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-[9px] bg-[#0e121f] border border-white/10 shadow-md text-[11px]"
+                  <div
+                    className={`w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-[9px] bg-[#0e121f] border shadow-md text-[11px] transition-colors duration-300 ${
+                      activeCard === 0 ? 'border-[#8b5cf6]/50' : 'border-white/10'
+                    }`}
                   >
                     <span className="inline-flex items-center gap-1.5 text-[#d5dce6] font-medium truncate">
                       <span className="text-[10px] text-[#858b94]">∞</span>
@@ -126,12 +127,13 @@ export const ManualProcessesSection: React.FC<ManualProcessesSectionProps> = ({
                     <span className="px-2 py-0.5 rounded-[5px] bg-[#22c55e]/20 text-[#4ade80] border border-[#22c55e]/30 font-medium text-[10px] shrink-0">
                       Completed
                     </span>
-                  </motion.div>
+                  </div>
 
                   {/* Pill 2: Assigned -> Loading */}
-                  <motion.div
-                    animate={{ x: activeCard === 0 ? -4 : 0 }}
-                    className="w-[88%] flex items-center justify-between gap-2 px-3 py-1.5 rounded-[9px] bg-[#0e121f] border border-white/10 shadow-md text-[11px]"
+                  <div
+                    className={`w-[88%] flex items-center justify-between gap-2 px-3 py-1.5 rounded-[9px] bg-[#0e121f] border shadow-md text-[11px] transition-colors duration-300 ${
+                      activeCard === 0 ? 'border-[#8b5cf6]/50' : 'border-white/10'
+                    }`}
                   >
                     <span className="inline-flex items-center gap-1.5 text-[#d5dce6] font-medium truncate">
                       <span className="text-[10px] text-[#858b94]">↳</span>
@@ -140,12 +142,13 @@ export const ManualProcessesSection: React.FC<ManualProcessesSectionProps> = ({
                     <span className="px-2 py-0.5 rounded-[5px] bg-white/[0.08] text-[#aeb5c0] font-medium text-[10px] shrink-0 animate-pulse">
                       Loading
                     </span>
-                  </motion.div>
+                  </div>
 
                   {/* Pill 3: Proposal Sent -> Waiting */}
-                  <motion.div
-                    animate={{ x: activeCard === 0 ? 5 : 0 }}
-                    className="w-[94%] flex items-center justify-between gap-2 px-3 py-1.5 rounded-[9px] bg-[#0e121f] border border-white/10 shadow-md text-[11px]"
+                  <div
+                    className={`w-[94%] flex items-center justify-between gap-2 px-3 py-1.5 rounded-[9px] bg-[#0e121f] border shadow-md text-[11px] transition-colors duration-300 ${
+                      activeCard === 0 ? 'border-[#8b5cf6]/50' : 'border-white/10'
+                    }`}
                   >
                     <span className="inline-flex items-center gap-1.5 text-[#d5dce6] font-medium truncate">
                       <svg className="w-3 h-3 text-[#858b94] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -156,7 +159,7 @@ export const ManualProcessesSection: React.FC<ManualProcessesSectionProps> = ({
                     <span className="px-2 py-0.5 rounded-[5px] bg-[#ef4444]/25 text-[#f87171] border border-[#ef4444]/35 font-medium text-[10px] shrink-0">
                       Waiting
                     </span>
-                  </motion.div>
+                  </div>
                 </div>
               </div>
             </div>

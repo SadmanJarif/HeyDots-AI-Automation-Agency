@@ -108,12 +108,11 @@ export const CaseStudiesAndPricing: React.FC<CaseStudiesAndPricingProps> = ({
         <AnimatePresence mode="wait">
           <motion.div
             key={activeCase.id}
-            initial={{ opacity: 0, x: 18 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -18 }}
-            whileHover={{ y: -4 }}
-            transition={{ type: 'spring', bounce: 0.2, duration: 0.55 }}
-            className="premium-interactive-card rounded-[20px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-5 sm:p-7 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch transition-all duration-300"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="premium-interactive-card rounded-[20px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card p-5 sm:p-7 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch transition-all duration-300"
           >
             {/* Left Image (5 cols) */}
             <div className="lg:col-span-5 rounded-[14px] overflow-hidden bg-[#12151e] h-[300px] sm:h-[340px] lg:h-[390px]">

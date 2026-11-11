@@ -1067,62 +1067,48 @@ export const CapabilitiesBento: React.FC<CapabilitiesBentoProps> = ({ onOpenCont
                     </div>
                   </div>
 
-                  {/* Right Column: Interactive 5-Bar Chart */}
-                  <div className="relative z-10 md:col-span-6 flex flex-col justify-end">
-                    <div className="h-[195px] flex items-end justify-between gap-2.5 sm:gap-3.5 px-2 pt-8 border-b border-white/[0.08]">
-                      {BAR_CHART_DATA.map((bar, idx) => {
-                        const isBarActive =
-                          hoveredBarIndex !== null
-                            ? hoveredBarIndex === idx
-                            : autoBarIndex === idx || bar.featured;
-                        const animatedHeight = isChartHovered || isBarActive
-                          ? Math.min(100, bar.heightPct + (bar.featured ? 4 : 7))
-                          : bar.heightPct;
+                      {/* Right Column: Interactive 5-Bar Chart */}
+                      <div className="relative z-10 md:col-span-6 flex flex-col justify-end">
+                        <div className="h-[195px] flex items-end justify-between gap-2.5 sm:gap-3.5 px-2 pt-8 border-b border-white/[0.08]">
+                          {BAR_CHART_DATA.map((bar, idx) => {
+                            const isBarActive =
+                              hoveredBarIndex !== null
+                                ? hoveredBarIndex === idx
+                                : autoBarIndex === idx || bar.featured;
+                            const animatedHeight = isChartHovered || isBarActive
+                              ? Math.min(100, bar.heightPct + (bar.featured ? 4 : 6))
+                              : bar.heightPct;
 
-                        return (
-                          <div
-                            key={bar.day}
-                            onMouseEnter={() => setHoveredBarIndex(idx)}
-                            className="flex-1 h-full flex flex-col items-center justify-end gap-2 cursor-pointer group/bar"
-                          >
-                            {/* Floating Dollar Pill Badge */}
-                            <motion.span
-                              animate={{
-                                y: isBarActive ? -3 : 0,
-                                scale: isBarActive ? 1.06 : 1,
-                              }}
-                              transition={{ type: 'spring', stiffness: 320, damping: 20 }}
-                              className={`px-2 py-0.5 rounded-[6px] text-[10.5px] font-medium tabular-nums transition-colors ${
-                                isBarActive
-                                  ? 'bar-chart-badge-active bg-[#e6e9f2] text-[#0a0d14] shadow-[0_4px_14px_rgba(255,255,255,0.25)]'
-                                  : 'bar-chart-badge-inactive bg-[#7c8293]/75 text-[#0a0d14]'
-                              }`}
-                            >
-                              {bar.label}
-                            </motion.span>
+                            return (
+                              <div
+                                key={bar.day}
+                                onMouseEnter={() => setHoveredBarIndex(idx)}
+                                className="flex-1 h-full flex flex-col items-center justify-end gap-2 cursor-pointer group/bar"
+                              >
+                                {/* Floating Dollar Pill Badge */}
+                                <span
+                                  className={`px-2 py-0.5 rounded-[6px] text-[10.5px] font-medium tabular-nums transition-all duration-300 ease-out ${
+                                    isBarActive
+                                      ? 'bar-chart-badge-active bg-[#e6e9f2] text-[#0a0d14] -translate-y-0.5 shadow-[0_4px_14px_rgba(255,255,255,0.25)]'
+                                      : 'bar-chart-badge-inactive bg-[#7c8293]/75 text-[#0a0d14] translate-y-0'
+                                  }`}
+                                >
+                                  {bar.label}
+                                </span>
 
-                            {/* Vertical Bar */}
-                            <motion.div
-                              initial={{ height: '15%' }}
-                              whileInView={{ height: `${animatedHeight}%` }}
-                              viewport={{ once: true }}
-                              animate={{ height: `${animatedHeight}%` }}
-                              transition={{
-                                type: 'spring',
-                                stiffness: 220,
-                                damping: 22,
-                                delay: idx * 0.04,
-                              }}
-                              className={`w-full max-w-[44px] rounded-t-[8px] transition-all duration-300 ${
-                                isBarActive
-                                  ? 'bar-chart-active-bar bg-gradient-to-b from-[#ffffff] via-[#e4e7f0] to-[#c5cad8] shadow-[0_0_25px_rgba(255,255,255,0.28)]'
-                                  : 'bar-chart-inactive-bar bg-gradient-to-b from-[#1a1e2d] to-[#111420] border-t border-x border-white/[0.06] group-hover/bar:from-[#262c42] group-hover/bar:to-[#171b2b]'
-                              }`}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
+                                {/* Vertical Bar */}
+                                <div
+                                  style={{ height: `${animatedHeight}%` }}
+                                  className={`w-full max-w-[44px] rounded-t-[8px] transition-all duration-500 ease-out ${
+                                    isBarActive
+                                      ? 'bar-chart-active-bar bg-gradient-to-b from-[#ffffff] via-[#e4e7f0] to-[#c5cad8] shadow-[0_0_25px_rgba(255,255,255,0.28)]'
+                                      : 'bar-chart-inactive-bar bg-gradient-to-b from-[#1a1e2d] to-[#111420] border-t border-x border-white/[0.06] group-hover/bar:from-[#262c42] group-hover/bar:to-[#171b2b]'
+                                  }`}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
 
                     {/* Chart Footer: Last 7 days + +12.5% trend */}
                     <div className="flex items-center justify-between pt-3 px-1 text-[11.5px]">
@@ -1189,9 +1175,6 @@ export const CapabilitiesBento: React.FC<CapabilitiesBentoProps> = ({ onOpenCont
                             ? 'animate-marquee-left flex items-center gap-2.5'
                             : 'animate-marquee-right flex items-center gap-2.5'
                         }
-                        style={{
-                          animationDuration: isIntegrationHovered ? '18s' : '30s',
-                        }}
                       >
                         {row.items.map((pill, pillIdx) => (
                           <div
