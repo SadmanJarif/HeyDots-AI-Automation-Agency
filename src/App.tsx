@@ -10,6 +10,7 @@ import GradientASCII from './components/GradientASCII';
 import { HeroSection } from './components/HeroSection';
 import { ComparisonAndQuote } from './components/ComparisonAndQuote';
 import { CapabilitiesBento } from './components/CapabilitiesBento';
+import { GrowthShowcaseBento } from './components/GrowthShowcaseBento';
 import { WhatWeBuildSection } from './components/WhatWeBuildSection';
 import { AgentSystemAndFeaturesSection } from './components/AgentSystemAndFeaturesSection';
 import { AgentProcessTimelineSection } from './components/AgentProcessTimelineSection';
@@ -108,6 +109,8 @@ export default function App() {
                 onBookCall={handleBookIntroCall}
               />
 
+              <GrowthShowcaseBento />
+
               <AgentSystemAndFeaturesSection
                 onOpenContact={handleOpenContact}
                 onBookCall={handleBookIntroCall}
@@ -127,7 +130,6 @@ export default function App() {
 
               <CaseStudiesAndPricing
                 onOpenContact={handleOpenContact}
-                onSelectCaseStudy={(study) => setSelectedCaseStudy(study)}
               />
 
               <TestimonialsFaqBlog

@@ -262,7 +262,7 @@ export const ComparisonAndTransformationSection: React.FC<
       {/* ====================================================================
           PART 2: CASE STUDY — How we transformed these businesses
           ==================================================================== */}
-      <div>
+      <div id="case" className="scroll-mt-24">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
