@@ -7,6 +7,9 @@ import DriftbarFooter from './DriftbarFooter';
 import { RainbowButton } from './RainbowButton';
 
 interface FooterAndNavProps {
+  onNavigate?: (to: string) => void;
+  currentPath?: string;
+  hideCtaSection?: boolean;
   onOpenContact: (defaultPlan?: string) => void;
   onBookCall: () => void;
   contactModalPlan: string | null;
@@ -20,13 +23,17 @@ interface FooterAndNavProps {
 }
 
 const MOBILE_NAV_LINKS = [
-  { label: 'Services', href: '#service' },
-  { label: 'Process', href: '#process' },
-  { label: 'Case study', href: '#case' },
-  { label: 'Blog', href: '#blog' },
+  { label: 'Services', href: '/#service' },
+  { label: 'Process', href: '/#process' },
+  { label: 'About', href: '/about' },
+  { label: 'Blog', href: '/#blog' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const FooterAndNav: React.FC<FooterAndNavProps> = ({
+  onNavigate,
+  currentPath = '/',
+  hideCtaSection = false,
   onOpenContact,
   onBookCall,
   contactModalPlan,
@@ -214,43 +221,45 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
   return (
     <>
       {/* READY TO START YOUR AI PROJECT CTA SECTION */}
-      <section
-        id="contact"
-        className="relative max-w-[1200px] mx-auto px-5 py-20 overflow-hidden scroll-mt-20"
-      >
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <AsciiWaveBackground className="w-full h-[280px]" cols={64} rows={14} />
-        </div>
-
-        <div className="relative z-10 flex flex-col items-center text-center max-w-[480px] mx-auto py-8">
-          <h2
-            className="text-clavion-gradient font-medium tracking-[-0.03em] leading-[1.15] mb-3"
-            style={{ fontSize: 'clamp(1.95rem, 3.8vw, 2.85rem)', textWrap: 'balance' }}
-          >
-            Ready to Start Your AI Project?
-          </h2>
-          <p className="text-[14px] sm:text-[15px] text-[#aeb5c0] leading-[1.6] max-w-[340px] mb-8">
-            Let’s explore how AI can boost your workflow and business performance.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-3.5">
-            <RainbowButton
-              label="TALK TO AN EXPERT"
-              variant="rainbow"
-              onClick={() => onOpenContact('Start AI Project')}
-            />
-            <RainbowButton
-              label="BOOK AN INTRO CALL"
-              variant="dark"
-              iconSrc="/assets/clavion/GukJuD6D51RayodFgi8oQiSRe0.svg"
-              onClick={onBookCall}
-            />
+      {!hideCtaSection && (
+        <section
+          id="contact"
+          className="relative max-w-[1200px] mx-auto px-5 py-20 overflow-hidden scroll-mt-20"
+        >
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <AsciiWaveBackground className="w-full h-[280px]" cols={64} rows={14} />
           </div>
-        </div>
-      </section>
 
-      {/* HEYDOTS MEADOW VIDEO FOOTER (DriftbarFooter) */}
-      <DriftbarFooter />
+          <div className="relative z-10 flex flex-col items-center text-center max-w-[480px] mx-auto py-8">
+            <h2
+              className="text-clavion-gradient font-medium tracking-[-0.03em] leading-[1.15] mb-3"
+              style={{ fontSize: 'clamp(1.95rem, 3.8vw, 2.85rem)', textWrap: 'balance' }}
+            >
+              Ready to Start Your AI Project?
+            </h2>
+            <p className="text-[14px] sm:text-[15px] text-[#aeb5c0] leading-[1.6] max-w-[340px] mb-8">
+              Let’s explore how AI can boost your workflow and business performance.
+            </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3.5">
+              <RainbowButton
+                label="TALK TO AN EXPERT"
+                variant="rainbow"
+                onClick={() => onOpenContact('Start AI Project')}
+              />
+              <RainbowButton
+                label="BOOK AN INTRO CALL"
+                variant="dark"
+                iconSrc="/assets/clavion/GukJuD6D51RayodFgi8oQiSRe0.svg"
+                onClick={onBookCall}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* HEYDOTS FOOTER */}
+      <DriftbarFooter onNavigate={onNavigate} />
 
       {/* FULL-SCREEN BLURRED BACKDROP OVERLAY WHEN MOBILE NAVBAR IS OPEN */}
       <AnimatePresence>
@@ -288,8 +297,18 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                   <li key={item.label}>
                     <a
                       href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center min-h-[48px] px-3 py-3 rounded-lg text-[15px] font-normal text-[#aeb5c0] hover:text-[#edf0f5] hover:bg-white/[0.04] transition-colors"
+                      onClick={(e) => {
+                        setIsMobileMenuOpen(false);
+                        if (onNavigate) {
+                          e.preventDefault();
+                          onNavigate(item.href);
+                        }
+                      }}
+                      className={`flex items-center min-h-[48px] px-3 py-3 rounded-lg text-[15px] font-normal transition-colors ${
+                        currentPath === item.href
+                          ? 'text-white bg-white/[0.06]'
+                          : 'text-[#aeb5c0] hover:text-[#edf0f5] hover:bg-white/[0.04]'
+                      }`}
                     >
                       {item.label}
                     </a>
@@ -308,28 +327,54 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
           {/* Left Nav Links */}
           <div className="flex items-center gap-4 text-[13px] text-[#aeb5c0]">
             <a
-              href="#service"
+              href="/#service"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/#service');
+                }
+              }}
               className="inline-flex items-center min-h-[44px] px-2 hover:text-[#edf0f5] transition-colors whitespace-nowrap shrink-0"
             >
               Services
             </a>
             <a
-              href="#process"
+              href="/#process"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/#process');
+                }
+              }}
               className="inline-flex items-center min-h-[44px] px-2 hover:text-[#edf0f5] transition-colors whitespace-nowrap shrink-0"
             >
               Process
             </a>
             <a
-              href="#case"
-              className="inline-flex items-center min-h-[44px] px-2 hover:text-[#edf0f5] transition-colors whitespace-nowrap shrink-0"
+              href="/about"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/about');
+                }
+              }}
+              className={`inline-flex items-center min-h-[44px] px-2 transition-colors whitespace-nowrap shrink-0 ${
+                currentPath === '/about' ? 'text-white font-medium' : 'hover:text-[#edf0f5]'
+              }`}
             >
-              Case study
+              About
             </a>
           </div>
 
           {/* Center HeyDots Brand Button with Rainbow Ring */}
           <a
-            href="#home"
+            href="/"
+            onClick={(e) => {
+              if (onNavigate) {
+                e.preventDefault();
+                onNavigate('/');
+              }
+            }}
             aria-label="HeyDots Home"
             className="h-11 min-h-[44px] min-w-[44px] rounded-full p-[1.5px] bg-clavion-rainbow flex items-center justify-center shrink-0 mx-1 hover:scale-105 transition-transform"
           >
@@ -341,14 +386,25 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
           {/* Right Nav Links + Contact Button */}
           <div className="flex items-center gap-3 text-[13px] text-[#aeb5c0]">
             <a
-              href="#blog"
+              href="/#blog"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/#blog');
+                }
+              }}
               className="inline-flex items-center min-h-[44px] px-2 hover:text-[#edf0f5] transition-colors whitespace-nowrap shrink-0"
             >
               Blog
             </a>
-            <button
-              type="button"
-              onClick={() => onOpenContact('Bottom Dock Contact')}
+            <a
+              href="/contact"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/contact');
+                }
+              }}
               className="group relative inline-flex items-center justify-center min-h-[44px] p-[1px] rounded-[8px] bg-clavion-dark-btn-border cursor-pointer shrink-0"
             >
               <span className="secondary-dark-btn-surface inline-flex items-center gap-1.5 min-h-[42px] px-3.5 py-2 rounded-[7px] bg-[#161920] group-hover:bg-[#1c2029] font-mono-tech text-[11px] uppercase tracking-wider text-[#edf0f5] transition-colors whitespace-nowrap">
@@ -366,7 +422,7 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                 </svg>
                 <span>CONTACT</span>
               </span>
-            </button>
+            </a>
           </div>
         </nav>
 

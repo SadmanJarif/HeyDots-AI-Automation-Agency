@@ -1,18 +1,22 @@
 import React, { useEffect, useRef } from 'react';
 
 const EXPLORE_LINKS = [
-  { label: 'Services', href: '#service' },
-  { label: 'Growth Analytics', href: '#growth' },
-  { label: 'Process', href: '#process' },
-  { label: 'Case Studies', href: '#case' },
+  { label: 'Services', href: '/#service' },
+  { label: 'Growth Analytics', href: '/#growth' },
+  { label: 'Process', href: '/#process' },
+  { label: 'About Us', href: '/about' },
 ];
 
 const CONNECT_LINKS = [
-  { label: 'Book a Call', href: '#contact' },
-  { label: 'Blog & Insights', href: '#blog' },
+  { label: 'Contact Page', href: '/contact' },
+  { label: 'Blog & Insights', href: '/#blog' },
   { label: 'Email Us', href: 'mailto:info@heydots.com' },
-  { label: 'Back to Top', href: '#home' },
+  { label: 'Back to Top', href: '/' },
 ];
+
+interface DriftbarFooterProps {
+  onNavigate?: (to: string) => void;
+}
 
 interface FooterParticle {
   x: number;
@@ -25,7 +29,7 @@ interface FooterParticle {
   phase: number;
 }
 
-export default function DriftbarFooter() {
+export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
   const footerRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const pointerRef = useRef<{ x: number; y: number; active: boolean }>({
@@ -85,22 +89,96 @@ export default function DriftbarFooter() {
     const drawFrame = (timeSec: number) => {
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Subtle perspective horizon grid lines near lower half
-      const horizonY = height * 0.52;
+      // Constrain hue oscillation strictly to the HeyDots landing page palette:
+      // Cobalt Horizon (#1e3fd8 / 225°) <-> Sky Cyan (#38bdf8 / 199°) <-> Electric Violet (#8b5cf6 / 258°)
+      const waveA = 0.5 + 0.5 * Math.sin(timeSec * 0.42);
+      const waveB = 0.5 + 0.5 * Math.cos(timeSec * 0.34);
+      const hueA = 199 + waveA * 59; // 199° cyan <-> 258° violet
+      const hueB = 224 + waveB * 38; // 224° cobalt <-> 262° indigo
+      const hueC = 192 + waveB * 36; // 192° teal-cyan (#66bcd3) <-> 228° blue
+
+      // 0. Deep obsidian-navy base gradient matching App.tsx (#0a0d14 -> #111834)
+      const shiftX = width * (0.5 + Math.sin(timeSec * 0.28) * 0.22);
+      const baseGrad = ctx.createLinearGradient(
+        shiftX - width * 0.45,
+        0,
+        shiftX + width * 0.45,
+        height
+      );
+      baseGrad.addColorStop(0, '#0a0d14');
+      baseGrad.addColorStop(0.48, `hsla(${hueB}, 58%, 12%, 0.98)`);
+      baseGrad.addColorStop(1, `hsla(${hueA}, 64%, 15%, 0.98)`);
+      ctx.fillStyle = baseGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // 1. Stageshow opposing elliptical aurora fields drifting gently within landing palette
+      const orbs = [
+        {
+          x: width * (0.22 + Math.sin(timeSec * 0.36) * 0.16),
+          y: height * (0.86 + Math.cos(timeSec * 0.28) * 0.12),
+          r: width * 0.58,
+          hue: hueC,
+          sat: 78,
+          light: 52,
+          alpha: 0.32,
+        },
+        {
+          x: width * (0.78 + Math.cos(timeSec * 0.32) * 0.16),
+          y: height * (0.74 + Math.sin(timeSec * 0.4) * 0.14),
+          r: width * 0.54,
+          hue: hueA,
+          sat: 82,
+          light: 56,
+          alpha: 0.28,
+        },
+        {
+          x: width * (0.5 + Math.sin(timeSec * 0.24 + 1.2) * 0.2),
+          y: height * (0.48 + Math.cos(timeSec * 0.3) * 0.14),
+          r: width * 0.48,
+          hue: hueB,
+          sat: 76,
+          light: 48,
+          alpha: 0.2,
+        },
+      ];
+
+      for (let o = 0; o < orbs.length; o++) {
+        const orb = orbs[o];
+        const og = ctx.createRadialGradient(orb.x, orb.y, 6, orb.x, orb.y, Math.max(90, orb.r));
+        og.addColorStop(0, `hsla(${orb.hue}, ${orb.sat}%, ${orb.light}%, ${orb.alpha})`);
+        og.addColorStop(
+          0.45,
+          `hsla(${orb.hue + 8}, ${orb.sat - 6}%, ${orb.light - 14}%, ${orb.alpha * 0.44})`
+        );
+        og.addColorStop(1, 'rgba(10, 13, 20, 0)');
+        ctx.fillStyle = og;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      // Quiet dark calm veil over upper band so text & links stay crisp (stageshow backgrounds.md)
+      const topCalm = ctx.createLinearGradient(0, 0, 0, height * 0.65);
+      topCalm.addColorStop(0, 'rgba(10, 13, 20, 0.56)');
+      topCalm.addColorStop(1, 'rgba(10, 13, 20, 0)');
+      ctx.fillStyle = topCalm;
+      ctx.fillRect(0, 0, width, height * 0.65);
+
+      // 2. Subtle perspective horizon grid lines synced with shifting landing hue
+      const horizonY = height * 0.5;
       ctx.save();
       ctx.beginPath();
       ctx.rect(0, horizonY, width, height - horizonY);
       ctx.clip();
 
       const gridFade = ctx.createLinearGradient(0, horizonY, 0, height);
-      gridFade.addColorStop(0, 'rgba(139, 92, 246, 0)');
-      gridFade.addColorStop(0.35, 'rgba(139, 92, 246, 0.08)');
-      gridFade.addColorStop(1, 'rgba(56, 189, 248, 0.14)');
+      gridFade.addColorStop(0, `hsla(${hueB}, 85%, 70%, 0)`);
+      gridFade.addColorStop(0.35, `hsla(${hueB}, 85%, 70%, 0.11)`);
+      gridFade.addColorStop(1, `hsla(${hueC}, 90%, 72%, 0.18)`);
       ctx.strokeStyle = gridFade;
       ctx.lineWidth = 1;
 
       // Perspective radiating meridians
-      const vanishX = width * 0.5 + (pointerRef.current.active ? (pointerRef.current.x - 0.5) * 40 : 0);
+      const vanishX =
+        width * 0.5 + (pointerRef.current.active ? (pointerRef.current.x - 0.5) * 44 : Math.sin(timeSec * 0.3) * 18);
       const numRays = width < 640 ? 10 : 18;
       for (let i = -numRays; i <= numRays; i++) {
         const bottomX = width * 0.5 + i * (width / numRays) * 1.35;
@@ -112,7 +190,7 @@ export default function DriftbarFooter() {
 
       // Exponentially spaced horizontal perspective lines
       const numRows = 8;
-      const scrollOffset = (timeSec * 0.22) % 1;
+      const scrollOffset = ((timeSec * 0.24) % 1 + 1) % 1;
       for (let r = 0; r < numRows; r++) {
         const t = (r + scrollOffset) / numRows;
         const y = horizonY + Math.pow(t, 2.05) * (height - horizonY);
@@ -123,22 +201,13 @@ export default function DriftbarFooter() {
       }
       ctx.restore();
 
-      // 2. Soft drifting aurora glow waves at bottom
-      const waveX = width * (0.5 + Math.sin(timeSec * 0.35) * 0.12);
-      const glow = ctx.createRadialGradient(waveX, height * 0.96, 10, waveX, height * 0.96, width * 0.62);
-      glow.addColorStop(0, 'rgba(124, 58, 237, 0.34)');
-      glow.addColorStop(0.42, 'rgba(56, 189, 248, 0.16)');
-      glow.addColorStop(1, 'rgba(10, 13, 20, 0)');
-      ctx.fillStyle = glow;
-      ctx.fillRect(0, 0, width, height);
-
       // Interactive pointer radial aura
       if (pointerRef.current.active) {
         const px = pointerRef.current.x * width;
         const py = pointerRef.current.y * height;
-        const pGrad = ctx.createRadialGradient(px, py, 0, px, py, 190);
-        pGrad.addColorStop(0, 'rgba(167, 139, 250, 0.16)');
-        pGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.06)');
+        const pGrad = ctx.createRadialGradient(px, py, 0, px, py, 210);
+        pGrad.addColorStop(0, `hsla(${hueC}, 90%, 68%, 0.22)`);
+        pGrad.addColorStop(0.5, `hsla(${hueA}, 85%, 62%, 0.08)`);
         pGrad.addColorStop(1, 'rgba(10, 13, 20, 0)');
         ctx.fillStyle = pGrad;
         ctx.fillRect(0, 0, width, height);
@@ -162,9 +231,9 @@ export default function DriftbarFooter() {
         const a = p.alpha * twinkle;
         const color =
           p.hue === 'violet'
-            ? `rgba(167, 139, 250, ${a.toFixed(3)})`
+            ? `hsla(${hueA}, 88%, 76%, ${a.toFixed(3)})`
             : p.hue === 'cyan'
-            ? `rgba(56, 189, 248, ${a.toFixed(3)})`
+            ? `hsla(${hueC}, 90%, 74%, ${a.toFixed(3)})`
             : `rgba(237, 240, 245, ${(a * 0.85).toFixed(3)})`;
 
         ctx.fillStyle = color;
@@ -200,7 +269,7 @@ export default function DriftbarFooter() {
     const start = performance.now();
     const tick = (now: number) => {
       if (inView) {
-        drawFrame((now - start) * 0.001);
+        drawFrame(Math.max(0, (now - start) * 0.001));
       }
       rafId = window.requestAnimationFrame(tick);
     };
@@ -300,7 +369,13 @@ export default function DriftbarFooter() {
           {/* Left Brand Block */}
           <div className="md:col-span-6">
             <a
-              href="#home"
+              href="/"
+              onClick={(e) => {
+                if (onNavigate) {
+                  e.preventDefault();
+                  onNavigate('/');
+                }
+              }}
               className="inline-flex items-center font-pacifico text-[28px] sm:text-[32px] text-[#f3f5fa] hover:opacity-90 transition-opacity drop-shadow-[0_2px_14px_rgba(0,0,0,0.6)]"
               aria-label="HeyDots home"
             >
@@ -340,6 +415,12 @@ export default function DriftbarFooter() {
                   <li key={item.label}>
                     <a
                       href={item.href}
+                      onClick={(e) => {
+                        if (onNavigate && !item.href.startsWith('mailto:')) {
+                          e.preventDefault();
+                          onNavigate(item.href);
+                        }
+                      }}
                       className="inline-flex items-center min-h-[38px] sm:min-h-[34px] text-[13.5px] text-[#aeb6c6] hover:text-white hover:translate-x-1 transition-all duration-200"
                     >
                       {item.label}
@@ -358,6 +439,12 @@ export default function DriftbarFooter() {
                   <li key={item.label}>
                     <a
                       href={item.href}
+                      onClick={(e) => {
+                        if (onNavigate && !item.href.startsWith('mailto:')) {
+                          e.preventDefault();
+                          onNavigate(item.href);
+                        }
+                      }}
                       className="inline-flex items-center min-h-[38px] sm:min-h-[34px] text-[13.5px] text-[#aeb6c6] hover:text-white hover:translate-x-1 transition-all duration-200"
                     >
                       {item.label}

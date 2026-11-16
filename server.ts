@@ -99,7 +99,11 @@ async function startServer() {
     app.use('*', async (req, res, next) => {
       try {
         const reqPath = req.originalUrl.split('?')[0];
-        const isKnownRoute = reqPath === '/' || reqPath === '/index.html';
+        const isKnownRoute =
+          reqPath === '/' ||
+          reqPath === '/index.html' ||
+          reqPath === '/about' ||
+          reqPath === '/contact';
 
         const templatePath = path.resolve(__dirname, 'index.html');
         let template = fs.readFileSync(templatePath, 'utf-8');
@@ -119,7 +123,11 @@ async function startServer() {
 
     app.use('*', (req, res) => {
       const reqPath = req.originalUrl.split('?')[0];
-      const isKnownRoute = reqPath === '/' || reqPath === '/index.html';
+      const isKnownRoute =
+        reqPath === '/' ||
+        reqPath === '/index.html' ||
+        reqPath === '/about' ||
+        reqPath === '/contact';
       const indexHtmlPath = path.resolve(distDir, 'index.html');
 
       if (fs.existsSync(indexHtmlPath)) {

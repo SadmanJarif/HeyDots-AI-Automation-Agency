@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion, useScroll } from 'motion/react';
 import { BlogPost, CaseStudy } from './data/clavionData';
 import GradientASCII from './components/GradientASCII';
@@ -21,17 +21,63 @@ import { CaseStudiesAndPricing } from './components/CaseStudiesAndPricing';
 import { TestimonialsFaqBlog } from './components/TestimonialsFaqBlog';
 import { FooterAndNav } from './components/FooterAndNav';
 import { RainbowButton } from './components/RainbowButton';
+import { AboutPage } from './components/AboutPage';
+import { ContactPage } from './components/ContactPage';
 
 export default function App() {
   const { scrollYProgress } = useScroll();
+  const [pathname, setPathname] = useState<string>(() =>
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
   const [contactModalPlan, setContactModalPlan] = useState<string | null>(null);
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<CaseStudy | null>(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [infoModalPage, setInfoModalPage] = useState<'about' | 'privacy' | '404' | null>(null);
 
-  const currentPathname = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const isNotFoundRoute =
-    currentPathname !== '/' && currentPathname !== '/index.html';
+  useEffect(() => {
+    const handlePopState = () => {
+      setPathname(window.location.pathname || '/');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigate = useCallback((to: string) => {
+    if (typeof window === 'undefined') return;
+    if (to.startsWith('mailto:') || to.startsWith('http')) {
+      window.location.href = to;
+      return;
+    }
+
+    const [rawPath, hashPart] = to.split('#');
+    const targetPath = rawPath === '' ? '/' : rawPath === '/index.html' ? '/' : rawPath;
+    const currentPath =
+      window.location.pathname === '/index.html' ? '/' : window.location.pathname;
+
+    if (targetPath !== currentPath) {
+      window.history.pushState({}, '', to);
+      setPathname(targetPath);
+    } else if (hashPart) {
+      window.history.replaceState({}, '', `/#${hashPart}`);
+    }
+
+    if (hashPart) {
+      window.setTimeout(() => {
+        const targetEl = document.getElementById(hashPart);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, targetPath !== currentPath ? 80 : 0);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, []);
+
+  const normalizedPath = pathname === '/index.html' ? '/' : pathname.replace(/\/+$/, '') || '/';
+  const isHomeRoute = normalizedPath === '/';
+  const isAboutRoute = normalizedPath === '/about';
+  const isContactRoute = normalizedPath === '/contact';
+  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute;
 
   const handleOpenContact = (defaultPlan = 'AI Consultation') => {
     setContactModalPlan(defaultPlan);
@@ -88,11 +134,22 @@ export default function App() {
                 This Route Has Been Automated Away
               </h1>
               <p className="text-[15px] text-[#aeb5c0] max-w-[440px] leading-[1.6] mb-8">
-                The page <code className="text-[#edf0f5] font-mono-tech">{currentPathname}</code> does not exist. Return to the main{' '}
+                The page <code className="text-[#edf0f5] font-mono-tech">{normalizedPath}</code> does not exist. Return to the main{' '}
                 <span className="font-pacifico text-[#f3f5fa]">HeyDots</span> workspace below.
               </p>
-              <RainbowButton label="BACK TO HOME" variant="rainbow" href="/" />
+              <RainbowButton label="BACK TO HOME" variant="rainbow" onClick={() => navigate('/')} />
             </section>
+          ) : isAboutRoute ? (
+            <AboutPage
+              onNavigate={navigate}
+              onOpenContact={handleOpenContact}
+              onBookCall={handleBookIntroCall}
+            />
+          ) : isContactRoute ? (
+            <ContactPage
+              onNavigate={navigate}
+              onBookCall={handleBookIntroCall}
+            />
           ) : (
             <>
               <HeroSection
@@ -141,6 +198,9 @@ export default function App() {
         </main>
 
         <FooterAndNav
+          onNavigate={navigate}
+          currentPath={normalizedPath}
+          hideCtaSection={isContactRoute}
           onOpenContact={handleOpenContact}
           onBookCall={handleBookIntroCall}
           contactModalPlan={contactModalPlan}
