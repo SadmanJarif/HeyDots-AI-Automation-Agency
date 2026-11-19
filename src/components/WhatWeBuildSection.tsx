@@ -270,7 +270,7 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
                 onMouseEnter={() => setHoveredAgentId(agent.id)}
                 onMouseLeave={() => setHoveredAgentId(null)}
                 onClick={() => onOpenContact(agent.title)}
-                className="premium-interactive-card group relative rounded-[16px] border border-white/[0.08] hover:border-[#8b5cf6]/55 bg-gradient-to-r from-[#111522]/95 via-[#0e121d]/95 to-[#121625]/95 px-5 py-5 sm:px-7 sm:py-6 shadow-[0_12px_34px_rgba(0,0,0,0.45)] hover:shadow-[0_18px_48px_rgba(124,58,237,0.22)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden"
+                className="premium-interactive-card group relative rounded-[18px] border border-white/[0.08] hover:border-[#8b5cf6]/70 bg-gradient-to-r from-[#111522]/95 via-[#0e121d]/95 to-[#121625]/95 px-5 py-5 sm:px-7 sm:py-6 shadow-[0_12px_34px_rgba(0,0,0,0.45)] hover:shadow-[0_22px_50px_-18px_rgba(124,58,237,0.45)] motion-safe:hover:-translate-y-1 motion-reduce:hover:translate-y-0 transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 {/* Subtle left-to-right violet hover wash */}
                 <div

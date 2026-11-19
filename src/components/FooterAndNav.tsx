@@ -224,13 +224,22 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
       {!hideCtaSection && (
         <section
           id="contact"
-          className="relative max-w-[1200px] mx-auto px-5 py-20 overflow-hidden scroll-mt-20"
+          className="relative max-w-[1200px] mx-auto px-5 pt-20 pb-24 sm:pt-28 sm:pb-32 scroll-mt-20"
         >
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <AsciiWaveBackground className="w-full h-[280px]" cols={64} rows={14} />
-          </div>
+          <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#0b0f18]/80 px-6 py-14 shadow-[0_28px_70px_-36px_rgba(0,0,0,0.85)] sm:px-12 sm:py-16">
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-60">
+              <AsciiWaveBackground className="h-[280px] w-full" cols={64} rows={14} />
+            </div>
+            <div
+              className="pointer-events-none absolute -left-12 -top-10 h-36 w-36 rounded-full bg-[#66bcd3]/20 blur-3xl"
+              aria-hidden
+            />
+            <div
+              className="pointer-events-none absolute -right-8 -bottom-10 h-40 w-40 rounded-full bg-[#8b5cf6]/25 blur-3xl"
+              aria-hidden
+            />
 
-          <div className="relative z-10 flex flex-col items-center text-center max-w-[480px] mx-auto py-8">
+            <div className="relative z-10 mx-auto flex max-w-[480px] flex-col items-center text-center">
             <h2
               className="text-clavion-gradient font-medium tracking-[-0.03em] leading-[1.15] mb-3"
               style={{ fontSize: 'clamp(1.95rem, 3.8vw, 2.85rem)', textWrap: 'balance' }}
@@ -254,6 +263,7 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                 onClick={onBookCall}
               />
             </div>
+          </div>
           </div>
         </section>
       )}

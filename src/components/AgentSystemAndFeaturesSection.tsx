@@ -167,182 +167,23 @@ const BenefitGradientIcon: React.FC<{ icon: BenefitItem['icon']; isHovered: bool
   );
 };
 
-export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSectionProps> = ({
-  onOpenContact,
-  onBookCall,
-}) => {
-  const [hoveredCapabilityIdx, setHoveredCapabilityIdx] = useState<number | null>(null);
-  const [autoCapIdx, setAutoCapIdx] = useState<number>(0);
+export const FeaturesWorkflowSection: React.FC<{
+  onOpenContact: (defaultPlan?: string) => void;
+}> = ({ onOpenContact }) => {
   const [hoveredFeatureIdx, setHoveredFeatureIdx] = useState<number | null>(null);
   const [autoLeadIdx, setAutoLeadIdx] = useState<number>(1);
   const [kanbanPhase, setKanbanPhase] = useState<number>(0);
-  const [hoveredBenefitId, setHoveredBenefitId] = useState<string | null>(null);
 
-  // Continuous live motion across AgentOS pills, Lead Qualification rows, and Kanban card
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setAutoCapIdx((prev) => (prev + 1) % AGENT_OS_CAPABILITIES.length);
       setAutoLeadIdx((prev) => (prev + 1) % LEAD_QUALIFICATION_ROWS.length);
       setKanbanPhase((prev) => (prev + 1) % 3);
     }, 2200);
     return () => window.clearInterval(timer);
   }, []);
 
-  const activeCapIdx = hoveredCapabilityIdx !== null ? hoveredCapabilityIdx : autoCapIdx;
-
   return (
-    <section className="max-w-[1200px] mx-auto px-4 sm:px-5 py-16 sm:py-20 space-y-20 sm:space-y-28 overflow-hidden">
-      {/* ====================================================================
-          SECTION 1A: WHAT WE MEAN BY "AI AGENT"
-          ==================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-        {/* Left Visual Card: Deep Midnight -> Electric Royal Purple -> Lavender Gradient Stage */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="agent-stage-gradient lg:col-span-6 relative rounded-[22px] p-5 sm:p-10 min-h-[370px] sm:min-h-[440px] flex flex-col items-center justify-center overflow-hidden border border-[#8b5cf6]/50 hover:border-[#a78bfa] shadow-[0_24px_70px_rgba(109,40,217,0.34)] hover:shadow-[0_30px_80px_rgba(124,58,237,0.48)] hover:-translate-y-1 transition-all duration-300"
-          style={{
-            background:
-              'linear-gradient(180deg, #070814 0%, #1d1559 36%, #5b3df5 72%, #c4b5fd 100%)',
-          }}
-        >
-          {/* Ambient Radial Glow */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-36 opacity-75"
-            style={{
-              background:
-                'radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 75%)',
-            }}
-          />
-
-          <div className="relative z-10 w-full max-w-[395px] flex flex-col items-center">
-            {/* AgentOS / HeyDots Header Badge */}
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-7 h-7 rounded-[8px] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.3)] flex items-center justify-center text-[#5b3df5]">
-                <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                  <path d="M12 3a9 9 0 1 0 9 9c0-1.5-.4-2.9-1-4.1" strokeLinecap="round" />
-                  <circle cx="12" cy="12" r="3.5" />
-                </svg>
-              </div>
-              <span className="agent-os-badge-text font-mono-tech text-[15px] sm:text-[16px] font-medium text-white tracking-tight">
-                AgentOS <span className="font-pacifico text-[#ede9fe] ml-0.5">HeyDots</span>:
-              </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 border border-white/25 font-mono-tech text-[9.5px] uppercase tracking-wider text-white">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-ping" />
-                LIVE
-              </span>
-            </div>
-
-            {/* 4 White Pill Checklist Bars with Smooth CSS Highlight */}
-            <div className="w-full flex flex-col gap-2.5">
-              {AGENT_OS_CAPABILITIES.map((item, idx) => {
-                const isActive = activeCapIdx === idx;
-                return (
-                  <div
-                    key={item}
-                    onMouseEnter={() => setHoveredCapabilityIdx(idx)}
-                    onMouseLeave={() => setHoveredCapabilityIdx(null)}
-                    className={`w-full rounded-[10px] bg-white px-3.5 sm:px-4 py-3 flex items-center justify-between gap-3 transition-all duration-300 ease-out cursor-default ${
-                      isActive
-                        ? 'shadow-[0_12px_30px_rgba(15,23,42,0.38)] ring-2 ring-[#a78bfa] translate-x-1'
-                        : 'shadow-[0_8px_22px_rgba(10,13,20,0.22)] opacity-95 translate-x-0'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span
-                        className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${
-                          isActive ? 'bg-[#5b3df5] text-white' : 'bg-[#ede9fe] text-[#5b3df5]'
-                        }`}
-                      >
-                        <svg
-                          className="w-3 h-3"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.8"
-                        >
-                          <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </span>
-                      <span className="font-mono-tech text-[11px] sm:text-[12.5px] text-[#0f172a] font-medium tracking-[-0.01em] truncate">
-                        {item}
-                      </span>
-                    </div>
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full shrink-0 transition-opacity duration-300 ${
-                        isActive ? 'bg-[#5b3df5] opacity-100' : 'opacity-0'
-                      }`}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Right Copy Column */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.25 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
-          className="lg:col-span-6 flex flex-col items-start"
-        >
-          <p className="font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9ca5b5] mb-3.5">
-            WHAT WE MEAN BY &ldquo;AI AGENT&rdquo;
-          </p>
-
-          <h2
-            className="text-clavion-gradient font-normal tracking-[-0.035em] leading-[1.08] mb-6"
-            style={{ fontSize: 'clamp(2.1rem, 4vw, 3.25rem)', textWrap: 'balance' }}
-          >
-            Not a chatbot. Not a script. A system that actually works.
-          </h2>
-
-          <div className="space-y-4 text-[14.5px] sm:text-[15.5px] text-[#9ca5b5] leading-[1.65] max-w-[500px] mb-8">
-            <p>
-              An AI agent is a software system designed to observe information, make decisions, and take action inside your business—automatically.
-            </p>
-            <p className="text-[#d5dce6] font-medium">They don’t replace your team.</p>
-            <p>
-              They remove repetitive work so your team can operate at a higher level.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={onBookCall}
-            className="strategy-cta-btn group inline-flex items-center min-h-[44px] rounded-[11px] bg-[#121521] hover:bg-[#191d2e] border border-white/15 hover:border-[#8b5cf6]/60 p-1.5 pl-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
-          >
-            <span className="strategy-cta-label text-[13px] font-medium text-[#f3f5fa] pr-3.5 whitespace-nowrap">
-              Book a Free Strategy Call
-            </span>
-            <span className="strategy-cta-arrow relative w-8 h-8 rounded-[8px] bg-white text-[#0b0d14] flex items-center justify-center overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105">
-              <svg
-                className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.3"
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <svg
-                className="w-4 h-4 absolute -translate-x-6 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.3"
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </button>
-        </motion.div>
-      </div>
-
+    <section id="features" className="max-w-[1200px] mx-auto px-4 sm:px-5 py-16 sm:py-20 overflow-hidden scroll-mt-20">
       {/* ====================================================================
           SECTION 1B: FEATURES — Real workflows. Real automation.
           ==================================================================== */}
@@ -596,6 +437,180 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
             </div>
           </motion.div>
         </div>
+      </div>
+    </section>
+  );
+};
+
+
+export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSectionProps> = ({
+  onOpenContact,
+  onBookCall,
+}) => {
+  const [hoveredCapabilityIdx, setHoveredCapabilityIdx] = useState<number | null>(null);
+  const [autoCapIdx, setAutoCapIdx] = useState<number>(0);
+  const [hoveredBenefitId, setHoveredBenefitId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setAutoCapIdx((prev) => (prev + 1) % AGENT_OS_CAPABILITIES.length);
+    }, 2200);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const activeCapIdx = hoveredCapabilityIdx !== null ? hoveredCapabilityIdx : autoCapIdx;
+
+  return (
+    <section className="max-w-[1200px] mx-auto px-4 sm:px-5 py-16 sm:py-20 space-y-20 sm:space-y-28 overflow-hidden">
+      {/* ====================================================================
+          SECTION 1A: WHAT WE MEAN BY "AI AGENT"
+          ==================================================================== */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        {/* Left Visual Card: Deep Midnight -> Electric Royal Purple -> Lavender Gradient Stage */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+          className="agent-stage-gradient lg:col-span-6 relative rounded-[22px] p-5 sm:p-10 min-h-[370px] sm:min-h-[440px] flex flex-col items-center justify-center overflow-hidden border border-[#8b5cf6]/50 hover:border-[#a78bfa] shadow-[0_24px_70px_rgba(109,40,217,0.34)] hover:shadow-[0_30px_80px_rgba(124,58,237,0.48)] hover:-translate-y-1 transition-all duration-300"
+          style={{
+            background:
+              'linear-gradient(180deg, #070814 0%, #1d1559 36%, #5b3df5 72%, #c4b5fd 100%)',
+          }}
+        >
+          {/* Ambient Radial Glow */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-36 opacity-75"
+            style={{
+              background:
+                'radial-gradient(ellipse at 50% 100%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 75%)',
+            }}
+          />
+
+          <div className="relative z-10 w-full max-w-[395px] flex flex-col items-center">
+            {/* AgentOS / HeyDots Header Badge */}
+            <div className="flex items-center gap-2.5 mb-5">
+              <div className="w-7 h-7 rounded-[8px] bg-white shadow-[0_4px_14px_rgba(0,0,0,0.3)] flex items-center justify-center text-[#5b3df5]">
+                <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M12 3a9 9 0 1 0 9 9c0-1.5-.4-2.9-1-4.1" strokeLinecap="round" />
+                  <circle cx="12" cy="12" r="3.5" />
+                </svg>
+              </div>
+              <span className="agent-os-badge-text font-mono-tech text-[15px] sm:text-[16px] font-medium text-white tracking-tight">
+                AgentOS <span className="font-pacifico text-[#ede9fe] ml-0.5">HeyDots</span>:
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/15 border border-white/25 font-mono-tech text-[9.5px] uppercase tracking-wider text-white">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4ade80] animate-ping" />
+                LIVE
+              </span>
+            </div>
+
+            {/* 4 White Pill Checklist Bars with Smooth CSS Highlight */}
+            <div className="w-full flex flex-col gap-2.5">
+              {AGENT_OS_CAPABILITIES.map((item, idx) => {
+                const isActive = activeCapIdx === idx;
+                return (
+                  <div
+                    key={item}
+                    onMouseEnter={() => setHoveredCapabilityIdx(idx)}
+                    onMouseLeave={() => setHoveredCapabilityIdx(null)}
+                    className={`w-full rounded-[10px] bg-white px-3.5 sm:px-4 py-3 flex items-center justify-between gap-3 transition-all duration-300 ease-out cursor-default ${
+                      isActive
+                        ? 'shadow-[0_12px_30px_rgba(15,23,42,0.38)] ring-2 ring-[#a78bfa] translate-x-1'
+                        : 'shadow-[0_8px_22px_rgba(10,13,20,0.22)] opacity-95 translate-x-0'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span
+                        className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                          isActive ? 'bg-[#5b3df5] text-white' : 'bg-[#ede9fe] text-[#5b3df5]'
+                        }`}
+                      >
+                        <svg
+                          className="w-3 h-3"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.8"
+                        >
+                          <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                      <span className="font-mono-tech text-[11px] sm:text-[12.5px] text-[#0f172a] font-medium tracking-[-0.01em] truncate">
+                        {item}
+                      </span>
+                    </div>
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full shrink-0 transition-opacity duration-300 ${
+                        isActive ? 'bg-[#5b3df5] opacity-100' : 'opacity-0'
+                      }`}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Right Copy Column */}
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.06 }}
+          className="lg:col-span-6 flex flex-col items-start"
+        >
+          <p className="font-mono-tech text-[11px] uppercase tracking-[0.2em] text-[#9ca5b5] mb-3.5">
+            WHAT WE MEAN BY &ldquo;AI AGENT&rdquo;
+          </p>
+
+          <h2
+            className="text-clavion-gradient font-normal tracking-[-0.035em] leading-[1.08] mb-6"
+            style={{ fontSize: 'clamp(2.1rem, 4vw, 3.25rem)', textWrap: 'balance' }}
+          >
+            Not a chatbot. Not a script. A system that actually works.
+          </h2>
+
+          <div className="space-y-4 text-[14.5px] sm:text-[15.5px] text-[#9ca5b5] leading-[1.65] max-w-[500px] mb-8">
+            <p>
+              An AI agent is a software system designed to observe information, make decisions, and take action inside your business—automatically.
+            </p>
+            <p className="text-[#d5dce6] font-medium">They don’t replace your team.</p>
+            <p>
+              They remove repetitive work so your team can operate at a higher level.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onBookCall}
+            className="strategy-cta-btn group inline-flex items-center min-h-[44px] rounded-[11px] bg-[#121521] hover:bg-[#191d2e] border border-white/15 hover:border-[#8b5cf6]/60 p-1.5 pl-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
+          >
+            <span className="strategy-cta-label text-[13px] font-medium text-[#f3f5fa] pr-3.5 whitespace-nowrap">
+              Book a Free Strategy Call
+            </span>
+            <span className="strategy-cta-arrow relative w-8 h-8 rounded-[8px] bg-white text-[#0b0d14] flex items-center justify-center overflow-hidden shadow-sm transition-transform duration-300 group-hover:scale-105">
+              <svg
+                className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.3"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <svg
+                className="w-4 h-4 absolute -translate-x-6 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.3"
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </button>
+        </motion.div>
       </div>
 
       {/* ====================================================================

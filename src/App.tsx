@@ -12,7 +12,7 @@ import { ComparisonAndQuote } from './components/ComparisonAndQuote';
 import { CapabilitiesBento } from './components/CapabilitiesBento';
 import { GrowthShowcaseBento } from './components/GrowthShowcaseBento';
 import { WhatWeBuildSection } from './components/WhatWeBuildSection';
-import { AgentSystemAndFeaturesSection } from './components/AgentSystemAndFeaturesSection';
+import { AgentSystemAndFeaturesSection, FeaturesWorkflowSection } from './components/AgentSystemAndFeaturesSection';
 import { AgentProcessTimelineSection } from './components/AgentProcessTimelineSection';
 import { ManualProcessesSection } from './components/ManualProcessesSection';
 import { WhyChooseUsAndProcess } from './components/WhyChooseUsAndProcess';
@@ -158,6 +158,8 @@ export default function App() {
               />
 
               <ComparisonAndQuote />
+
+              <FeaturesWorkflowSection onOpenContact={handleOpenContact} />
 
               <CapabilitiesBento onOpenContact={handleOpenContact} />
 
