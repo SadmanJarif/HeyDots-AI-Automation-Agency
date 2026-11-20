@@ -4,6 +4,7 @@ export interface BrandLogo {
   src: string;
   width: number;
   height: number;
+  invert?: boolean;
 }
 
 export interface ChaosIcon {
@@ -95,13 +96,13 @@ export interface BlogPost {
 }
 
 export const BRAND_LOGOS: BrandLogo[] = [
-  { id: 'brand-1', name: 'Haptick', src: '/assets/clavion/YhXDnmFoqguccWFqV0Qk63lz8Q.svg', width: 96, height: 24 },
-  { id: 'brand-2', name: 'Natie', src: '/assets/clavion/uQSyjqWEH54ruHoZV3lknUnFXY0.svg', width: 92, height: 23 },
-  { id: 'brand-3', name: 'Wallab', src: '/assets/clavion/yPKlUqib0ZCNYtwWUOgrR9ozNo.svg', width: 96, height: 21 },
-  { id: 'brand-4', name: 'Monve', src: '/assets/clavion/nhzysJ4TGgMZVWMiF53iyLoJ6nE.svg', width: 73, height: 24 },
-  { id: 'brand-5', name: 'Void', src: '/assets/clavion/6uJvC8IBXTNd82kGEHyFiILi8NA.svg', width: 61, height: 26 },
-  { id: 'brand-6', name: 'Kobe', src: '/assets/clavion/fwzzYaCZASBtAblmo5MRFJ89Eew.svg', width: 55, height: 40 },
-  { id: 'brand-7', name: 'Z-Line', src: '/assets/clavion/c1NPZhXQpRJIvw1ofReJ7m45h24.svg', width: 81, height: 18 },
+  { id: 'aeodot', name: 'AEODOT', src: '/assets/partners/aeodot.png', width: 2131, height: 738 },
+  { id: 'asha-shilajit', name: 'Asha Shilajit', src: '/assets/partners/asha-shilajit.png', width: 667, height: 292, invert: true },
+  { id: 'air', name: 'Air', src: '/assets/partners/air.png', width: 200, height: 174 },
+  { id: 'outshine-media', name: 'Outshine Media', src: '/assets/partners/outshine-media.png', width: 512, height: 434 },
+  { id: 'media-growth-strategy', name: 'Media Growth Strategy', src: '/assets/partners/media-growth-strategy.png', width: 512, height: 180 },
+  { id: 'catcoz', name: 'Catcoz', src: '/assets/partners/catcoz.png', width: 512, height: 115 },
+  { id: 'frambit', name: 'Frambit', src: '/assets/partners/frambit.png', width: 512, height: 122 },
 ];
 
 export const DIY_CHAOS_ICONS: ChaosIcon[] = [

@@ -103,16 +103,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact }) => {
                 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
             }}
           >
-            <div className="animate-marquee-left items-center gap-12">
+            <div className="animate-marquee-left items-center gap-6 sm:gap-8">
               {repeatedLogos.map((logo, idx) => (
                 <div
                   key={`${logo.id}-${idx}`}
-                  className="flex items-center justify-center shrink-0 opacity-80 hover:opacity-100 transition-opacity px-2"
+                  className="flex h-7 shrink-0 items-center justify-center sm:h-8"
                 >
                   <img
                     src={logo.src}
                     alt={logo.name}
-                    className="h-[22px] w-auto object-contain"
+                    className={`max-h-full max-w-full object-contain opacity-90 transition-opacity hover:opacity-100 ${
+                      logo.invert ? 'brightness-0 invert' : ''
+                    }`}
                     referrerPolicy="no-referrer"
                   />
                 </div>
