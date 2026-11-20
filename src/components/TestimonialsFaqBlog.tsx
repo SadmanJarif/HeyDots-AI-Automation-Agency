@@ -207,14 +207,14 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
             </div>
 
             {/* Need More Clarity Card */}
-            <div className="relative rounded-[18px] border border-[#858b94]/20 bg-[#0c0f17] p-6 sm:p-7 overflow-hidden max-w-[385px]">
+            <div className="relative mx-auto w-full rounded-[18px] border border-[#858b94]/20 bg-[#0c0f17] p-6 sm:p-7 overflow-hidden max-w-[385px]">
               <img
                 src="/assets/clavion/r5potKirfvn8BYMPvQoN9Zv2Ng.svg"
                 alt="FAQ consultation card background pattern"
                 className="pointer-events-none absolute inset-0 w-full h-full object-cover opacity-50"
                 referrerPolicy="no-referrer"
               />
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col items-center text-center">
                 <img
                   src="/assets/clavion/VF9V184MwL6lVi1H5HxAgomY5M.jpg"
                   alt="AI Specialist"
