@@ -388,7 +388,7 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
         {/* Giant Frosted Glass Watermark */}
         <p
           aria-hidden="true"
-          className="pointer-events-none select-none font-pacifico absolute left-1/2 bottom-[5.6rem] sm:bottom-[5.5rem] -translate-x-1/2 z-[3] whitespace-nowrap leading-none text-[#f7f4ff] opacity-60"
+          className="pointer-events-none select-none font-pacifico absolute left-1/2 bottom-[5.6rem] sm:bottom-[5.5rem] -translate-x-1/2 z-[3] whitespace-nowrap leading-none text-[#f7f4ff] opacity-35"
           style={{
             fontSize: 'clamp(2.7rem, 16vw, 7.5rem)',
             textShadow: '0 12px 28px rgba(7, 9, 16, 0.95)',
