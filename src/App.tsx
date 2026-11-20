@@ -23,6 +23,8 @@ import { FooterAndNav } from './components/FooterAndNav';
 import { RainbowButton } from './components/RainbowButton';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { isLegalPath, LegalPage } from './components/LegalPage';
+import { openIntroCallWindow } from './lib/introCall';
 
 export default function App() {
   const { scrollYProgress } = useScroll();
@@ -77,14 +79,15 @@ export default function App() {
   const isHomeRoute = normalizedPath === '/';
   const isAboutRoute = normalizedPath === '/about';
   const isContactRoute = normalizedPath === '/contact';
-  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute;
+  const isLegalRoute = isLegalPath(normalizedPath);
+  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute && !isLegalRoute;
 
   const handleOpenContact = (defaultPlan = 'AI Consultation') => {
     setContactModalPlan(defaultPlan);
   };
 
   const handleBookIntroCall = () => {
-    setContactModalPlan('Book 20-Min Intro Call');
+    openIntroCallWindow();
   };
 
   return (
@@ -146,16 +149,12 @@ export default function App() {
               onBookCall={handleBookIntroCall}
             />
           ) : isContactRoute ? (
-            <ContactPage
-              onNavigate={navigate}
-              onBookCall={handleBookIntroCall}
-            />
+            <ContactPage onNavigate={navigate} />
+          ) : isLegalRoute ? (
+            <LegalPage path={normalizedPath} onNavigate={navigate} />
           ) : (
             <>
-              <HeroSection
-                onOpenContact={handleOpenContact}
-                onBookCall={handleBookIntroCall}
-              />
+              <HeroSection onOpenContact={handleOpenContact} />
 
               <ComparisonAndQuote />
 
@@ -163,21 +162,13 @@ export default function App() {
 
               <CapabilitiesBento onOpenContact={handleOpenContact} />
 
-              <WhatWeBuildSection
-                onOpenContact={handleOpenContact}
-                onBookCall={handleBookIntroCall}
-              />
+              <WhatWeBuildSection onOpenContact={handleOpenContact} />
 
               <GrowthShowcaseBento />
 
-              <AgentSystemAndFeaturesSection
-                onOpenContact={handleOpenContact}
-                onBookCall={handleBookIntroCall}
-              />
+              <AgentSystemAndFeaturesSection onOpenContact={handleOpenContact} />
 
-              <AgentProcessTimelineSection
-                onBookCall={handleBookIntroCall}
-              />
+              <AgentProcessTimelineSection />
 
               <ManualProcessesSection onOpenContact={handleOpenContact} />
 
@@ -193,7 +184,6 @@ export default function App() {
 
               <TestimonialsFaqBlog
                 onOpenContact={handleOpenContact}
-                onSelectBlogPost={(post) => setSelectedBlogPost(post)}
               />
             </>
           )}
@@ -204,7 +194,6 @@ export default function App() {
           currentPath={normalizedPath}
           hideCtaSection={isContactRoute}
           onOpenContact={handleOpenContact}
-          onBookCall={handleBookIntroCall}
           contactModalPlan={contactModalPlan}
           onCloseContact={() => setContactModalPlan(null)}
           selectedCaseStudy={selectedCaseStudy}

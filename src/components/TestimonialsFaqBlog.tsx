@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
-  BLOG_POSTS,
-  BlogPost,
   FAQ_ITEMS,
   TESTIMONIALS,
 } from '../data/clavionData';
@@ -11,12 +9,10 @@ import { RainbowButton, SectionKicker } from './RainbowButton';
 
 interface TestimonialsFaqBlogProps {
   onOpenContact: (defaultPlan?: string) => void;
-  onSelectBlogPost: (post: BlogPost) => void;
 }
 
 export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
   onOpenContact,
-  onSelectBlogPost,
 }) => {
   const [activeTestimonialIdx, setActiveTestimonialIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -286,64 +282,6 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* BLOG SECTION: Insights on AI and Automation */}
-      <section id="blog" className="max-w-[1200px] mx-auto px-5 py-16 scroll-mt-20">
-        <div className="flex flex-col items-center text-center mb-12">
-          <SectionKicker text="FROM OUR BLOG" className="mb-3" />
-          <h2
-            className="text-clavion-gradient font-medium tracking-[-0.03em] leading-[1.16]"
-            style={{ fontSize: 'clamp(1.85rem, 3.5vw, 2.75rem)' }}
-          >
-            Insights on AI and Automation
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {BLOG_POSTS.map((post, idx) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              whileHover={{ y: -6 }}
-              transition={{ type: 'spring', bounce: 0.2, duration: 0.65, delay: idx * 0.06 }}
-              onClick={() => onSelectBlogPost(post)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onSelectBlogPost(post);
-                }
-              }}
-              className="premium-interactive-card group cursor-pointer flex flex-col p-4 rounded-[20px] border border-[#858b94]/20 hover:border-[#8b5cf6]/50 bg-clavion-card transition-all duration-300"
-            >
-              <div className="rounded-[16px] overflow-hidden border border-[#858b94]/20 bg-[#141720] mb-4 aspect-[16/9]">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-
-              <div className="flex items-center gap-2 mb-2.5">
-                <span className="px-2.5 py-1 rounded-md bg-[#161922] border border-[#858b94]/20 text-[11px] text-[#aeb5c0]">
-                  {post.category}
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-[#161922] border border-[#858b94]/20 text-[11px] text-[#aeb5c0]">
-                  {post.date}
-                </span>
-              </div>
-
-              <h3 className="text-[17px] sm:text-[18px] font-medium text-[#edf0f5] group-hover:text-white transition-colors leading-snug">
-                {post.title}
-              </h3>
-            </motion.article>
-          ))}
         </div>
       </section>
     </>

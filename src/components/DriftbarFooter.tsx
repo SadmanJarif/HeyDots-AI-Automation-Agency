@@ -9,10 +9,58 @@ const EXPLORE_LINKS = [
 
 const CONNECT_LINKS = [
   { label: 'Contact Page', href: '/contact' },
-  { label: 'Blog & Insights', href: '/#blog' },
   { label: 'Email Us', href: 'mailto:info@heydots.com' },
   { label: 'Back to Top', href: '/' },
 ];
+
+const LEGAL_LINKS = [
+  { label: 'Cookie Policy', href: '/cookie-policy' },
+  { label: 'Terms', href: '/terms' },
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Data Protection', href: '/data-protection' },
+  { label: 'Disclaimer', href: '/disclaimer' },
+];
+
+const footerLinkClass =
+  'inline-flex items-center min-h-[38px] sm:min-h-[34px] text-[13.5px] text-[#aeb6c6] hover:text-white hover:translate-x-1 transition-all duration-200';
+
+function FooterLinkColumn({
+  title,
+  label,
+  links,
+  onNavigate,
+}: {
+  title: string;
+  label: string;
+  links: { label: string; href: string }[];
+  onNavigate?: (to: string) => void;
+}) {
+  return (
+    <nav aria-label={label}>
+      <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#edf0f5] mb-3.5">
+        {title}
+      </h3>
+      <ul className="flex flex-col gap-1">
+        {links.map((item) => (
+          <li key={item.href}>
+            <a
+              href={item.href}
+              onClick={(e) => {
+                if (onNavigate && !item.href.startsWith('mailto:')) {
+                  e.preventDefault();
+                  onNavigate(item.href);
+                }
+              }}
+              className={footerLinkClass}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
 
 interface DriftbarFooterProps {
   onNavigate?: (to: string) => void;
@@ -365,9 +413,9 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
         />
 
         {/* Top Main Content Grid */}
-        <div className="relative z-10 p-6 sm:p-10 lg:p-12 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-10 items-start">
+        <div className="relative z-10 p-6 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* Left Brand Block */}
-          <div className="md:col-span-6">
+          <div className="lg:col-span-4">
             <a
               href="/"
               onClick={(e) => {
@@ -404,55 +452,26 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
             </div>
           </div>
 
-          {/* Right Link Columns (Clean 2x4 Grid) */}
-          <div className="md:col-span-6 grid grid-cols-2 gap-8 sm:gap-12 md:justify-items-end">
-            <nav aria-label="Footer explore navigation">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#edf0f5] mb-3.5">
-                Explore
-              </h3>
-              <ul className="flex flex-col gap-1">
-                {EXPLORE_LINKS.map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      onClick={(e) => {
-                        if (onNavigate && !item.href.startsWith('mailto:')) {
-                          e.preventDefault();
-                          onNavigate(item.href);
-                        }
-                      }}
-                      className="inline-flex items-center min-h-[38px] sm:min-h-[34px] text-[13.5px] text-[#aeb6c6] hover:text-white hover:translate-x-1 transition-all duration-200"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <nav aria-label="Footer connect navigation">
-              <h3 className="text-[13px] font-semibold uppercase tracking-[0.08em] text-[#edf0f5] mb-3.5">
-                Connect
-              </h3>
-              <ul className="flex flex-col gap-1">
-                {CONNECT_LINKS.map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      onClick={(e) => {
-                        if (onNavigate && !item.href.startsWith('mailto:')) {
-                          e.preventDefault();
-                          onNavigate(item.href);
-                        }
-                      }}
-                      className="inline-flex items-center min-h-[38px] sm:min-h-[34px] text-[13.5px] text-[#aeb6c6] hover:text-white hover:translate-x-1 transition-all duration-200"
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+          {/* Link columns: Explore, Connect, Legal */}
+          <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-8 sm:gap-x-8">
+            <FooterLinkColumn
+              title="Explore"
+              label="Footer explore navigation"
+              links={EXPLORE_LINKS}
+              onNavigate={onNavigate}
+            />
+            <FooterLinkColumn
+              title="Connect"
+              label="Footer connect navigation"
+              links={CONNECT_LINKS}
+              onNavigate={onNavigate}
+            />
+            <FooterLinkColumn
+              title="Legal"
+              label="Footer legal navigation"
+              links={LEGAL_LINKS}
+              onNavigate={onNavigate}
+            />
           </div>
         </div>
 

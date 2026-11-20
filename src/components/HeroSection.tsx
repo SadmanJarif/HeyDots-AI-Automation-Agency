@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { BRAND_LOGOS } from '../data/clavionData';
+import { INTRO_CALL_URL } from '../lib/introCall';
 import { RainbowButton, SectionKicker } from './RainbowButton';
 
 interface HeroSectionProps {
   onOpenContact: (defaultPlan?: string) => void;
-  onBookCall: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookCall }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact }) => {
   const repeatedLogos = [...BRAND_LOGOS, ...BRAND_LOGOS, ...BRAND_LOGOS];
 
   return (
@@ -76,7 +76,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenContact, onBookC
               label="BOOK AN INTRO CALL"
               variant="dark"
               iconSrc="/assets/clavion/GukJuD6D51RayodFgi8oQiSRe0.svg"
-              onClick={onBookCall}
+              href={INTRO_CALL_URL}
             />
           </div>
           <p className="text-[12px] text-[#858b94] mt-1">

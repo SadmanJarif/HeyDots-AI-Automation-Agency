@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
+import { INTRO_CALL_URL } from '../lib/introCall';
 
 interface WhatWeBuildSectionProps {
   onOpenContact: (defaultPlan?: string) => void;
-  onBookCall: () => void;
 }
 
 interface AgentBuildItem {
@@ -177,7 +177,6 @@ const AgentGradientIcon: React.FC<{ type: AgentBuildItem['iconType']; isHovered:
 
 export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
   onOpenContact,
-  onBookCall,
 }) => {
   const [hoveredAgentId, setHoveredAgentId] = useState<string | null>(null);
   const [hoveredRowIdx, setHoveredRowIdx] = useState<number | null>(null);
@@ -221,9 +220,10 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
           </div>
 
           {/* "Book a Free Strategy Call [->]" Split Button matching screenshot */}
-          <button
-            type="button"
-            onClick={onBookCall}
+          <a
+            href={INTRO_CALL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="strategy-cta-btn group self-start md:self-end inline-flex items-center min-h-[44px] rounded-[11px] bg-[#121521] hover:bg-[#191d2e] border border-white/15 hover:border-[#8b5cf6]/60 p-1.5 pl-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer shrink-0"
           >
             <span className="strategy-cta-label text-[13px] font-medium text-[#f3f5fa] pr-3.5 whitespace-nowrap">
@@ -249,7 +249,7 @@ export const WhatWeBuildSection: React.FC<WhatWeBuildSectionProps> = ({
                 <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
-          </button>
+          </a>
         </motion.div>
 
         {/* 5 Horizontal Agent Cards Stack */}

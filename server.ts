@@ -22,6 +22,18 @@ export interface StoredLead {
 
 const storedLeads: StoredLead[] = [];
 
+const KNOWN_PAGE_PATHS = new Set([
+  '/',
+  '/index.html',
+  '/about',
+  '/contact',
+  '/cookie-policy',
+  '/terms',
+  '/privacy',
+  '/data-protection',
+  '/disclaimer',
+]);
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
@@ -99,11 +111,7 @@ async function startServer() {
     app.use('*', async (req, res, next) => {
       try {
         const reqPath = req.originalUrl.split('?')[0];
-        const isKnownRoute =
-          reqPath === '/' ||
-          reqPath === '/index.html' ||
-          reqPath === '/about' ||
-          reqPath === '/contact';
+        const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath);
 
         const templatePath = path.resolve(__dirname, 'index.html');
         let template = fs.readFileSync(templatePath, 'utf-8');
@@ -123,11 +131,7 @@ async function startServer() {
 
     app.use('*', (req, res) => {
       const reqPath = req.originalUrl.split('?')[0];
-      const isKnownRoute =
-        reqPath === '/' ||
-        reqPath === '/index.html' ||
-        reqPath === '/about' ||
-        reqPath === '/contact';
+      const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath);
       const indexHtmlPath = path.resolve(distDir, 'index.html');
 
       if (fs.existsSync(indexHtmlPath)) {

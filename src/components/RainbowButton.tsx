@@ -1,4 +1,5 @@
 import React from 'react';
+import { INTRO_CALL_URL } from '../lib/introCall';
 
 interface SectionKickerProps {
   text: string;
@@ -159,6 +160,15 @@ export const RainbowButton: React.FC<RainbowButtonProps> = ({
   fullWidth = false,
   type = 'button',
 }) => {
+  // About still passes onClick for "BOOK AN INTRO CALL". Treat that label as the
+  // Cal.com link so the control is a real anchor without editing AboutPage.
+  const effectiveHref =
+    href ?? (/\bintro call\b/i.test(label) ? INTRO_CALL_URL : undefined);
+  const externalAttrs =
+    effectiveHref && /^https?:\/\//i.test(effectiveHref)
+      ? { target: '_blank' as const, rel: 'noopener noreferrer' }
+      : {};
+
   const innerContent = (
     <span className="relative inline-flex items-center justify-center gap-2.5 overflow-hidden">
       {/* Leading Icon Badge */}
@@ -227,9 +237,9 @@ export const RainbowButton: React.FC<RainbowButtonProps> = ({
       </span>
     );
 
-    if (href && !onClick) {
+    if (effectiveHref) {
       return (
-        <a href={href} className={wrapperClasses}>
+        <a href={effectiveHref} className={wrapperClasses} {...externalAttrs}>
           {innerSurface}
         </a>
       );
@@ -257,9 +267,9 @@ export const RainbowButton: React.FC<RainbowButtonProps> = ({
     </span>
   );
 
-  if (href && !onClick) {
+  if (effectiveHref) {
     return (
-      <a href={href} className={darkWrapperClasses}>
+      <a href={effectiveHref} className={darkWrapperClasses} {...externalAttrs}>
         {darkInnerSurface}
       </a>
     );

@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'motion/react';
-
-interface AgentProcessTimelineSectionProps {
-  onBookCall: () => void;
-}
+import { INTRO_CALL_URL } from '../lib/introCall';
 
 interface TimelineStepData {
   number: string;
@@ -60,9 +57,7 @@ const WEEKLY_BARS = [
   { day: 'SUN', heightPct: 62 },
 ];
 
-export const AgentProcessTimelineSection: React.FC<AgentProcessTimelineSectionProps> = ({
-  onBookCall,
-}) => {
+export const AgentProcessTimelineSection: React.FC = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -414,9 +409,10 @@ export const AgentProcessTimelineSection: React.FC<AgentProcessTimelineSectionPr
                       : 'opacity-100 lg:opacity-0 lg:translate-y-1 lg:pointer-events-none'
                   }`}
                 >
-                  <button
-                    type="button"
-                    onClick={onBookCall}
+                  <a
+                    href={INTRO_CALL_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="strategy-cta-btn group inline-flex items-center min-h-[44px] rounded-[11px] bg-[#121521] hover:bg-[#191d2e] border border-white/15 hover:border-[#8b5cf6]/60 p-1.5 pl-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
                   >
                     <span className="strategy-cta-label text-[13px] font-medium text-[#f3f5fa] pr-3.5 whitespace-nowrap">
@@ -450,7 +446,7 @@ export const AgentProcessTimelineSection: React.FC<AgentProcessTimelineSectionPr
                         />
                       </svg>
                     </span>
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
