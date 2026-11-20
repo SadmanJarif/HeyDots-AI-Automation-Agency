@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 const EXPLORE_LINKS = [
   { label: 'Services', href: '/#service' },
@@ -66,291 +66,12 @@ interface DriftbarFooterProps {
   onNavigate?: (to: string) => void;
 }
 
-interface FooterParticle {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  r: number;
-  alpha: number;
-  hue: 'violet' | 'cyan' | 'white';
-  phase: number;
-}
-
 export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
-  const footerRef = useRef<HTMLElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const pointerRef = useRef<{ x: number; y: number; active: boolean }>({
-    x: 0.5,
-    y: 0.6,
-    active: false,
-  });
-
-  useEffect(() => {
-    const footer = footerRef.current;
-    const canvas = canvasRef.current;
-    if (!footer || !canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const prefersReduced =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    let width = 0;
-    let height = 0;
-    let inView = true;
-    let rafId = 0;
-    let particles: FooterParticle[] = [];
-
-    const initScene = () => {
-      const rect = footer.getBoundingClientRect();
-      const nextW = Math.max(280, Math.round(rect.width));
-      const nextH = Math.max(320, Math.round(rect.height));
-      if (Math.abs(nextW - width) < 2 && Math.abs(nextH - height) < 2) return;
-
-      width = nextW;
-      height = nextH;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      const count = width < 640 ? 28 : 52;
-      const nextParticles: FooterParticle[] = [];
-      for (let i = 0; i < count; i++) {
-        const hueRoll = i % 5;
-        nextParticles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.18,
-          vy: -0.14 - Math.random() * 0.25,
-          r: 0.9 + Math.random() * 1.5,
-          alpha: 0.22 + Math.random() * 0.55,
-          hue: hueRoll === 0 || hueRoll === 1 ? 'violet' : hueRoll === 2 || hueRoll === 3 ? 'cyan' : 'white',
-          phase: Math.random() * Math.PI * 2,
-        });
-      }
-      particles = nextParticles;
-    };
-
-    const drawFrame = (timeSec: number) => {
-      ctx.clearRect(0, 0, width, height);
-
-      // Constrain hue oscillation strictly to the HeyDots landing page palette:
-      // Cobalt Horizon (#1e3fd8 / 225°) <-> Sky Cyan (#38bdf8 / 199°) <-> Electric Violet (#8b5cf6 / 258°)
-      const waveA = 0.5 + 0.5 * Math.sin(timeSec * 0.42);
-      const waveB = 0.5 + 0.5 * Math.cos(timeSec * 0.34);
-      const hueA = 199 + waveA * 59; // 199° cyan <-> 258° violet
-      const hueB = 224 + waveB * 38; // 224° cobalt <-> 262° indigo
-      const hueC = 192 + waveB * 36; // 192° teal-cyan (#66bcd3) <-> 228° blue
-
-      // 0. Deep obsidian-navy base gradient matching App.tsx (#0a0d14 -> #111834)
-      const shiftX = width * (0.5 + Math.sin(timeSec * 0.28) * 0.22);
-      const baseGrad = ctx.createLinearGradient(
-        shiftX - width * 0.45,
-        0,
-        shiftX + width * 0.45,
-        height
-      );
-      baseGrad.addColorStop(0, '#0a0d14');
-      baseGrad.addColorStop(0.48, `hsla(${hueB}, 58%, 12%, 0.98)`);
-      baseGrad.addColorStop(1, `hsla(${hueA}, 64%, 15%, 0.98)`);
-      ctx.fillStyle = baseGrad;
-      ctx.fillRect(0, 0, width, height);
-
-      // 1. Stageshow opposing elliptical aurora fields drifting gently within landing palette
-      const orbs = [
-        {
-          x: width * (0.22 + Math.sin(timeSec * 0.36) * 0.16),
-          y: height * (0.86 + Math.cos(timeSec * 0.28) * 0.12),
-          r: width * 0.58,
-          hue: hueC,
-          sat: 78,
-          light: 52,
-          alpha: 0.32,
-        },
-        {
-          x: width * (0.78 + Math.cos(timeSec * 0.32) * 0.16),
-          y: height * (0.74 + Math.sin(timeSec * 0.4) * 0.14),
-          r: width * 0.54,
-          hue: hueA,
-          sat: 82,
-          light: 56,
-          alpha: 0.28,
-        },
-        {
-          x: width * (0.5 + Math.sin(timeSec * 0.24 + 1.2) * 0.2),
-          y: height * (0.48 + Math.cos(timeSec * 0.3) * 0.14),
-          r: width * 0.48,
-          hue: hueB,
-          sat: 76,
-          light: 48,
-          alpha: 0.2,
-        },
-      ];
-
-      for (let o = 0; o < orbs.length; o++) {
-        const orb = orbs[o];
-        const og = ctx.createRadialGradient(orb.x, orb.y, 6, orb.x, orb.y, Math.max(90, orb.r));
-        og.addColorStop(0, `hsla(${orb.hue}, ${orb.sat}%, ${orb.light}%, ${orb.alpha})`);
-        og.addColorStop(
-          0.45,
-          `hsla(${orb.hue + 8}, ${orb.sat - 6}%, ${orb.light - 14}%, ${orb.alpha * 0.44})`
-        );
-        og.addColorStop(1, 'rgba(10, 13, 20, 0)');
-        ctx.fillStyle = og;
-        ctx.fillRect(0, 0, width, height);
-      }
-
-      // Quiet dark calm veil over upper band so text & links stay crisp (stageshow backgrounds.md)
-      const topCalm = ctx.createLinearGradient(0, 0, 0, height * 0.65);
-      topCalm.addColorStop(0, 'rgba(10, 13, 20, 0.56)');
-      topCalm.addColorStop(1, 'rgba(10, 13, 20, 0)');
-      ctx.fillStyle = topCalm;
-      ctx.fillRect(0, 0, width, height * 0.65);
-
-      // 2. Subtle perspective horizon grid lines synced with shifting landing hue
-      const horizonY = height * 0.5;
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0, horizonY, width, height - horizonY);
-      ctx.clip();
-
-      const gridFade = ctx.createLinearGradient(0, horizonY, 0, height);
-      gridFade.addColorStop(0, `hsla(${hueB}, 85%, 70%, 0)`);
-      gridFade.addColorStop(0.35, `hsla(${hueB}, 85%, 70%, 0.11)`);
-      gridFade.addColorStop(1, `hsla(${hueC}, 90%, 72%, 0.18)`);
-      ctx.strokeStyle = gridFade;
-      ctx.lineWidth = 1;
-
-      // Perspective radiating meridians
-      const vanishX =
-        width * 0.5 + (pointerRef.current.active ? (pointerRef.current.x - 0.5) * 44 : Math.sin(timeSec * 0.3) * 18);
-      const numRays = width < 640 ? 10 : 18;
-      for (let i = -numRays; i <= numRays; i++) {
-        const bottomX = width * 0.5 + i * (width / numRays) * 1.35;
-        ctx.beginPath();
-        ctx.moveTo(vanishX, horizonY - 20);
-        ctx.lineTo(bottomX, height);
-        ctx.stroke();
-      }
-
-      // Exponentially spaced horizontal perspective lines
-      const numRows = 8;
-      const scrollOffset = ((timeSec * 0.24) % 1 + 1) % 1;
-      for (let r = 0; r < numRows; r++) {
-        const t = (r + scrollOffset) / numRows;
-        const y = horizonY + Math.pow(t, 2.05) * (height - horizonY);
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-      ctx.restore();
-
-      // Interactive pointer radial aura
-      if (pointerRef.current.active) {
-        const px = pointerRef.current.x * width;
-        const py = pointerRef.current.y * height;
-        const pGrad = ctx.createRadialGradient(px, py, 0, px, py, 210);
-        pGrad.addColorStop(0, `hsla(${hueC}, 90%, 68%, 0.22)`);
-        pGrad.addColorStop(0.5, `hsla(${hueA}, 85%, 62%, 0.08)`);
-        pGrad.addColorStop(1, 'rgba(10, 13, 20, 0)');
-        ctx.fillStyle = pGrad;
-        ctx.fillRect(0, 0, width, height);
-      }
-
-      // 3. Drifting luminous particles
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        if (!prefersReduced) {
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.y < -8) {
-            p.y = height + 8;
-            p.x = Math.random() * width;
-          }
-          if (p.x < -8) p.x = width + 8;
-          if (p.x > width + 8) p.x = -8;
-        }
-
-        const twinkle = 0.55 + 0.45 * Math.sin(timeSec * 1.6 + p.phase);
-        const a = p.alpha * twinkle;
-        const color =
-          p.hue === 'violet'
-            ? `hsla(${hueA}, 88%, 76%, ${a.toFixed(3)})`
-            : p.hue === 'cyan'
-            ? `hsla(${hueC}, 90%, 74%, ${a.toFixed(3)})`
-            : `rgba(237, 240, 245, ${(a * 0.85).toFixed(3)})`;
-
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    };
-
-    initScene();
-
-    if (prefersReduced) {
-      drawFrame(1.2);
-      const ro = new ResizeObserver(() => {
-        initScene();
-        drawFrame(1.2);
-      });
-      ro.observe(footer);
-      return () => ro.disconnect();
-    }
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        inView = entries[0]?.isIntersecting ?? true;
-      },
-      { threshold: 0.05 }
-    );
-    io.observe(footer);
-
-    const ro = new ResizeObserver(() => initScene());
-    ro.observe(footer);
-
-    const start = performance.now();
-    const tick = (now: number) => {
-      if (inView) {
-        drawFrame(Math.max(0, (now - start) * 0.001));
-      }
-      rafId = window.requestAnimationFrame(tick);
-    };
-    rafId = window.requestAnimationFrame(tick);
-
-    return () => {
-      io.disconnect();
-      ro.disconnect();
-      window.cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    pointerRef.current = {
-      x: (e.clientX - rect.left) / Math.max(1, rect.width),
-      y: (e.clientY - rect.top) / Math.max(1, rect.height),
-      active: true,
-    };
-  };
-
-  const handlePointerLeave = () => {
-    pointerRef.current.active = false;
-  };
-
   return (
     <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-5 pb-24 md:pb-28">
       <footer
-        ref={footerRef}
         id="footer"
-        onPointerMove={handlePointerMove}
-        onPointerLeave={handlePointerLeave}
-        className="relative overflow-hidden rounded-[22px] sm:rounded-[26px] border border-white/[0.1] bg-gradient-to-b from-[#0d101b]/95 via-[#0a0d16]/98 to-[#070910] shadow-[0_24px_70px_rgba(0,0,0,0.82),inset_0_1px_0_rgba(255,255,255,0.08)] min-h-[430px] sm:min-h-[465px] flex flex-col justify-between"
+        className="relative overflow-hidden rounded-[22px] sm:rounded-[26px] border border-white/[0.1] bg-[#070910]/25 shadow-[0_24px_70px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.08)] min-h-[430px] sm:min-h-[465px] flex flex-col justify-between"
       >
         {/* Top Luminous Hairline Accent */}
         <div
@@ -362,26 +83,17 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
           }}
         />
 
-        {/* Animated Neural Horizon Grid & Aurora Particle Canvas */}
-        <canvas
-          ref={canvasRef}
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 w-full h-full z-0"
-        />
-
-        {/* Soft Ambient Corner Spotlights */}
+        {/* Lets the site ASCII field show through, with the same cobalt, cyan, and violet wash. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full z-0"
+          className="pointer-events-none absolute inset-0 z-0"
           style={{
-            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.14) 0%, rgba(124, 58, 237, 0) 70%)',
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full z-0"
-          style={{
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(56, 189, 248, 0) 70%)',
+            background: [
+              'radial-gradient(ellipse 70% 48% at 12% 0%, rgba(99,102,241,0.28), transparent 62%)',
+              'radial-gradient(ellipse 62% 42% at 92% 6%, rgba(56,189,248,0.2), transparent 58%)',
+              'radial-gradient(ellipse 80% 36% at 50% 100%, rgba(232,121,249,0.16), transparent 64%)',
+              'linear-gradient(180deg, rgba(10,13,20,0.82) 0%, rgba(10,13,20,0.46) 46%, rgba(10,13,20,0.72) 100%)',
+            ].join(', '),
           }}
         />
 
