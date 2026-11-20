@@ -26,6 +26,7 @@ const NAV_LINKS = [
   { label: 'Services', href: '/#service', key: 'service' },
   { label: 'Process', href: '/#process', key: 'process' },
   { label: 'About', href: '/about', key: 'about' },
+  { label: 'Contact', href: '/contact', key: 'contact' },
 ];
 
 export const FooterAndNav: React.FC<FooterAndNavProps> = ({
@@ -317,14 +318,20 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
               role="dialog"
               aria-modal="true"
               aria-label="Mobile navigation menu"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="pointer-events-auto mb-3 w-full max-w-[440px] overflow-hidden rounded-[22px] border border-white/10 bg-[#0c1018]/90 p-2 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl md:hidden"
+              initial={{ opacity: 0, y: 14, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 10, scale: 0.98 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              className="pointer-events-auto mb-2.5 w-full max-w-[440px] overflow-hidden rounded-[24px] border border-white/10 bg-[#0c1018]/92 shadow-[0_24px_60px_-24px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl md:hidden"
             >
-              <ul className="flex flex-col">
-                {NAV_LINKS.map((item) => {
+              <div className="flex items-center justify-between px-4 pb-1 pt-3.5">
+                <p className="font-mono-tech text-[10px] uppercase tracking-[0.18em] text-[#8d95a6]">
+                  Menu
+                </p>
+                <span className="font-pacifico text-[15px] text-[#f4f6fb]">HeyDots</span>
+              </div>
+              <ul className="flex flex-col gap-0.5 px-1.5 pb-1.5">
+                {NAV_LINKS.map((item, index) => {
                   const active = linkIsActive(item.key);
                   return (
                     <li key={item.key}>
@@ -335,32 +342,43 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                           goTo(item.href);
                         }}
                         aria-current={active ? 'page' : undefined}
-                        className={`flex min-h-12 items-center justify-between rounded-2xl px-4 text-[15px] transition-colors ${
+                        className={`flex min-h-[52px] items-center gap-3 rounded-[16px] px-3 transition-colors ${
                           active
-                            ? 'bg-white/[0.07] text-white'
-                            : 'text-[#b7c0ce] hover:bg-white/[0.04] hover:text-white'
+                            ? 'bg-white/[0.08] text-white'
+                            : 'text-[#c5ccd8] active:bg-white/[0.05]'
                         }`}
                       >
-                        <span>{item.label}</span>
                         <span
-                          className={`h-1.5 w-1.5 rounded-full ${active ? 'bg-[#a78bfa] shadow-[0_0_10px_#a78bfa]' : 'bg-transparent'}`}
-                          aria-hidden
-                        />
+                          className={`grid h-8 w-8 shrink-0 place-items-center rounded-full font-mono-tech text-[11px] ${
+                            active
+                              ? 'bg-[#8b5cf6] text-white'
+                              : 'bg-white/[0.05] text-[#9aa3b4]'
+                          }`}
+                        >
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-[16px] tracking-[-0.01em]">{item.label}</span>
+                        {active ? (
+                          <span className="ml-auto text-[11px] uppercase tracking-[0.14em] text-[#c4b5fd]">
+                            Here
+                          </span>
+                        ) : null}
                       </a>
                     </li>
                   );
                 })}
               </ul>
-              <a
-                href="/contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  goTo('/contact');
-                }}
-                className="mt-1 flex min-h-11 items-center justify-center rounded-2xl bg-[#8b5cf6] text-[13px] font-medium tracking-[0.04em] text-white transition-colors hover:bg-[#7c3aed]"
-              >
-                Contact
-              </a>
+              <div className="border-t border-white/[0.06] p-2">
+                <a
+                  href={INTRO_CALL_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex min-h-11 items-center justify-center rounded-[16px] bg-[#8b5cf6] text-[14px] font-medium text-white transition-colors active:bg-[#7c3aed]"
+                >
+                  Book a call
+                </a>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -409,41 +427,35 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
             })}
           </div>
 
-          <a
-            href="/contact"
-            onClick={(e) => {
-              e.preventDefault();
-              goTo('/contact');
-            }}
-            aria-current={linkIsActive('contact') ? 'page' : undefined}
-            className={`hidden h-9 items-center rounded-full px-4 text-[13px] font-medium text-white transition-colors md:inline-flex ${
-              linkIsActive('contact')
-                ? 'bg-[#7c3aed] shadow-[0_8px_22px_-10px_rgba(139,92,246,0.95)]'
-                : 'bg-[#8b5cf6] shadow-[0_8px_22px_-10px_rgba(139,92,246,0.9)] hover:bg-[#7c3aed]'
-            }`}
-          >
-            Contact
-          </a>
-
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-navigation-dialog"
-            aria-haspopup="dialog"
-            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#edf0f5] transition-colors hover:bg-white/[0.06] md:hidden"
-          >
-            {isMobileMenuOpen ? (
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3.5 3.5L12.5 12.5M12.5 3.5L3.5 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-                <path d="M3.5 5.75H14.5M3.5 12.25H14.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
-            )}
-          </button>
+          <div className="flex items-center gap-1">
+            <a
+              href={INTRO_CALL_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-9 items-center rounded-full bg-[#8b5cf6] px-3.5 text-[13px] font-medium text-white shadow-[0_8px_22px_-10px_rgba(139,92,246,0.9)] transition-colors hover:bg-[#7c3aed]"
+            >
+              Book a call
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation-dialog"
+              aria-haspopup="dialog"
+              aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[#edf0f5] transition-colors hover:bg-white/[0.06] md:hidden"
+            >
+              {isMobileMenuOpen ? (
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3.5 3.5L12.5 12.5M12.5 3.5L3.5 12.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <path d="M3.5 5.75H14.5M3.5 12.25H14.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              )}
+            </button>
+          </div>
         </nav>
       </header>
 

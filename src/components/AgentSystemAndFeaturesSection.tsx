@@ -324,7 +324,7 @@ export const FeaturesWorkflowSection: React.FC<{
 
                 {/* Column 2: IN PROGRESS */}
                 <div className="rounded-[9px] bg-[#fde68a]/80 p-2 flex flex-col items-center">
-                  <span className="font-mono-tech text-[8.5px] font-semibold uppercase tracking-wider text-amber-900/80 whitespace-nowrap">
+                  <span className="font-mono-tech text-center text-[7px] font-semibold uppercase leading-tight tracking-wide text-amber-900/80 sm:text-[8.5px]">
                     IN PROGRESS
                   </span>
                 </div>
@@ -535,7 +535,7 @@ export const AgentSystemAndFeaturesSection: React.FC<AgentSystemAndFeaturesSecti
                           <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </span>
-                      <span className="font-mono-tech text-[11px] sm:text-[12.5px] text-[#0f172a] font-medium tracking-[-0.01em] truncate">
+                      <span className="font-mono-tech text-[11px] sm:text-[12.5px] text-[#0f172a] font-medium tracking-[-0.01em] leading-snug">
                         {item}
                       </span>
                     </div>

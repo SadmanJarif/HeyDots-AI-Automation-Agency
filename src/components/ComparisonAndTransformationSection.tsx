@@ -481,23 +481,23 @@ export const ComparisonAndTransformationSection: React.FC<
                 </div>
 
                 {/* 3 Segmented Barcode Metric Sub-Cards */}
-                <div className="grid grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-1 gap-2 min-[460px]:grid-cols-3 min-[460px]:gap-2.5">
                   {INVENTORY_SUB_CARDS.map((sub) => (
                     <div
                       key={sub.label}
-                      className="rounded-[9px] bg-[#0b152b] border border-white/[0.06] p-2.5 flex flex-col justify-between"
+                      className="rounded-[9px] bg-[#0b152b] border border-white/[0.06] p-2.5 flex flex-row items-center justify-between gap-3 min-[460px]:flex-col min-[460px]:items-stretch"
                     >
-                      <div>
-                        <p className="text-[13px] sm:text-[14px] font-bold text-white leading-tight">
+                      <div className="min-w-0">
+                        <p className="text-[15px] min-[460px]:text-[13px] sm:text-[14px] font-bold text-white leading-tight">
                           {sub.value}
                         </p>
-                        <p className="text-[9.5px] text-[#9ca5b5] truncate mt-0.5 mb-2">
+                        <p className="text-[12px] min-[460px]:text-[10px] text-[#9ca5b5] leading-tight mt-0.5 min-[460px]:mb-2">
                           {sub.label}
                         </p>
                       </div>
 
                       {/* Segmented Barcode Bars */}
-                      <div className="flex items-center gap-[2px] h-3">
+                      <div className="flex w-24 shrink-0 items-center gap-[2px] h-3 min-[460px]:w-full">
                         {Array.from({ length: sub.totalBars }).map((_, barIdx) => {
                           const isFilled =
                             barIdx <

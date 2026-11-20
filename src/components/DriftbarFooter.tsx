@@ -388,15 +388,10 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
         {/* Giant Frosted Glass Watermark */}
         <p
           aria-hidden="true"
-          className="pointer-events-none select-none font-pacifico absolute left-1/2 -bottom-4 sm:-bottom-6 -translate-x-1/2 z-[1] whitespace-nowrap leading-[1.05] px-4 opacity-55"
+          className="pointer-events-none select-none font-pacifico absolute left-1/2 bottom-[5.6rem] sm:bottom-[5.5rem] -translate-x-1/2 z-[3] whitespace-nowrap leading-none text-[#f7f4ff]"
           style={{
-            fontSize: 'clamp(4.4rem, 15vw, 13rem)',
-            background:
-              'linear-gradient(to bottom, rgba(255,255,255,0.42), rgba(167,189,248,0.16) 55%, rgba(255,255,255,0.28))',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            filter: 'drop-shadow(0 0 28px rgba(139, 92, 246, 0.2))',
+            fontSize: 'clamp(2.7rem, 16vw, 7.5rem)',
+            textShadow: '0 12px 28px rgba(7, 9, 16, 0.95)',
           }}
         >
           HeyDots
@@ -405,10 +400,10 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
         {/* Bottom Horizon Mist */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-20 z-[2]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-10 sm:h-16 z-[2]"
           style={{
             background:
-              'linear-gradient(to top, rgba(7,9,16,0.92) 0%, rgba(7,9,16,0.42) 52%, rgba(7,9,16,0) 100%)',
+              'linear-gradient(to top, rgba(7,9,16,0.35) 0%, rgba(7,9,16,0) 100%)',
           }}
         />
 
@@ -476,8 +471,8 @@ export default function DriftbarFooter({ onNavigate }: DriftbarFooterProps) {
         </div>
 
         {/* Bottom Copyright Strip */}
-        <div className="relative z-10 px-6 sm:px-10 lg:px-12 pb-6 sm:pb-8 pt-12 sm:pt-16 flex flex-col sm:flex-row items-center justify-between gap-2 text-[12px] text-[#9aa4b5]">
-          <p>© 2026 HeyDots · All rights reserved.</p>
+        <div className="relative z-10 px-6 pb-5 pt-28 sm:px-10 sm:pb-7 sm:pt-36 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-2 text-[12px] font-medium text-[#f4f7fb]">
+          <p>© 2024–2026 HeyDots · All rights reserved.</p>
           <p className="font-mono-tech text-[11px] tracking-[0.04em] text-[#858f9f]">
             HEYDOTS.COM
           </p>
