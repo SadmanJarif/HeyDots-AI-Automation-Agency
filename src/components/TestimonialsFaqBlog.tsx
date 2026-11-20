@@ -5,7 +5,8 @@ import {
   TESTIMONIALS,
 } from '../data/clavionData';
 import { getNextSlideIndex, toggleAccordionItem } from '../utils/clavionLogic';
-import { RainbowButton, SectionKicker } from './RainbowButton';
+import { SectionKicker } from './RainbowButton';
+import { GlossyAiButton } from './PillButtons';
 
 interface TestimonialsFaqBlogProps {
   onOpenContact: (defaultPlan?: string) => void;
@@ -44,7 +45,6 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
             What Our Clients Think
           </h2>
 
-          {/* 4.5 rating on Contra */}
           <div className="flex items-center gap-2.5 text-[13px] text-[#aeb5c0]">
             <img
               src="/assets/clavion/yVXrTzvfd0eA12KuXkAYzEVKok.svg"
@@ -52,13 +52,7 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
               className="h-3.5 w-auto object-contain"
               referrerPolicy="no-referrer"
             />
-            <span>4.5 rating on</span>
-            <img
-              src="/assets/clavion/XBN0NyzDZlwRxMc9GiCmQzP62I.svg"
-              alt="Contra"
-              className="h-4 w-auto object-contain"
-              referrerPolicy="no-referrer"
-            />
+            <span>4.5 rating</span>
           </div>
         </div>
 
@@ -227,9 +221,8 @@ export const TestimonialsFaqBlog: React.FC<TestimonialsFaqBlogProps> = ({
                 <p className="text-[13px] text-[#aeb5c0] mb-5">
                   We’re here to help you make the right decision.
                 </p>
-                <RainbowButton
-                  label="TALK TO AN EXPERT"
-                  variant="rainbow"
+                <GlossyAiButton
+                  label="Talk to an Expert"
                   onClick={() => onOpenContact('FAQ Inquiry')}
                 />
               </div>

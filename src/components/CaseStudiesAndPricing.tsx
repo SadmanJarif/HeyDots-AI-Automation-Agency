@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { SCALABLE_AI_INDUSTRIES } from '../data/clavionData';
-import { RainbowButton } from './RainbowButton';
+import { GlossyAiButton } from './PillButtons';
 
 interface CaseStudiesAndPricingProps {
   onOpenContact: (defaultPlan?: string) => void;
@@ -72,9 +72,8 @@ export const CaseStudiesAndPricing: React.FC<CaseStudiesAndPricingProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3.5">
-              <RainbowButton
-                label="SCHEDULE A CONSULTATION"
-                variant="rainbow"
+              <GlossyAiButton
+                label="Schedule a Consultation"
                 onClick={() => onOpenContact('Industry AI Solution')}
               />
               <div className="inline-flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] bg-[#161920] border border-[#858b94]/20">

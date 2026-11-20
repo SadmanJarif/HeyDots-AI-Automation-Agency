@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, Mail, Phone, Headphones, type LucideIcon } from 'lucide-react';
+import { Mail, Phone, Headphones, type LucideIcon } from 'lucide-react';
 import { Separator } from '@radix-ui/react-separator';
 import * as d3 from 'd3';
 import { feature } from 'topojson-client';
@@ -12,6 +12,7 @@ import type {
 import type { GeoPermissibleObjects } from 'd3';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { GlossyAiButton } from '@/src/components/PillButtons';
 
 interface GlobeWireframeProps {
   width?: number;
@@ -942,14 +943,12 @@ export default function ContactWithGlobe({
                     </p>
                   ) : null}
 
-                  <Button
+                  <GlossyAiButton
                     type="submit"
                     disabled={isSubmitting}
-                    className="group h-11 w-fit rounded-xl bg-[#8b5cf6] px-8 text-sm font-semibold text-white hover:bg-[#7c3aed] disabled:opacity-60"
-                  >
-                    {isSubmitting ? 'Sending...' : 'Submit'}
-                    <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                  </Button>
+                    className="self-start"
+                    label={isSubmitting ? 'Sending Request...' : 'Submit Request'}
+                  />
                 </form>
               </>
             )}

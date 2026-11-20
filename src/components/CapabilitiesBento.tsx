@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
+import { GlossyAiButton } from './PillButtons';
 
 interface CapabilitiesBentoProps {
   onOpenContact: (defaultPlan?: string) => void;
@@ -584,33 +585,10 @@ export const CapabilitiesBento: React.FC<CapabilitiesBentoProps> = ({ onOpenCont
                     </div>
 
                     <div className="pt-6">
-                      <button
-                        type="button"
+                      <GlossyAiButton
+                        label="Work with Us"
                         onClick={() => onOpenContact('Intelligent Process Optimization')}
-                        className="strategy-cta-btn group/work inline-flex items-center min-h-[44px] rounded-[11px] bg-[#121521] hover:bg-[#191d2e] border border-[#6366f1]/45 hover:border-[#8b5cf6]/80 p-1.5 pl-4 text-[13px] font-medium text-[#f3f5fa] shadow-[0_0_22px_rgba(99,102,241,0.25)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] hover:-translate-y-0.5 active:scale-[0.98] transition-all cursor-pointer"
-                      >
-                        <span className="strategy-cta-label pr-3 whitespace-nowrap">Work with us</span>
-                        <span className="strategy-cta-arrow relative w-7 h-7 rounded-[7px] bg-white text-[#0b0d14] flex items-center justify-center overflow-hidden shadow-sm">
-                          <svg
-                            className="w-3.5 h-3.5 transition-transform duration-300 group-hover/work:translate-x-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.3"
-                          >
-                            <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                          <svg
-                            className="w-3.5 h-3.5 absolute -translate-x-5 transition-transform duration-300 group-hover/work:translate-x-0"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.3"
-                          >
-                            <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </span>
-                      </button>
+                      />
                     </div>
                   </div>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { RainbowButton, SectionKicker } from './RainbowButton';
+import { BookCallButton, GlossyAiButton } from './PillButtons';
 import founderPhoto from '../../founder.png';
 import hasinPhoto from '../../hasin-cofounder.jpg';
 
@@ -94,7 +95,6 @@ const CORE_PRACTICES = [
 export const AboutPage: React.FC<AboutPageProps> = ({
   onNavigate,
   onOpenContact,
-  onBookCall,
 }) => {
   return (
     <div className="relative z-10 pt-9 pb-14">
@@ -152,17 +152,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             transition={{ duration: 0.55, ease: SMOOTH_EASE, delay: 0.18 }}
             className="flex flex-wrap items-center justify-center gap-3.5"
           >
-            <RainbowButton
-              label="WORK WITH US"
-              variant="rainbow"
+            <GlossyAiButton
+              label="Work with Us"
               onClick={() => onNavigate('/contact')}
             />
-            <RainbowButton
-              label="BOOK AN INTRO CALL"
-              variant="dark"
-              iconSrc="/assets/clavion/GukJuD6D51RayodFgi8oQiSRe0.svg"
-              onClick={onBookCall}
-            />
+            <BookCallButton />
           </motion.div>
         </div>
 

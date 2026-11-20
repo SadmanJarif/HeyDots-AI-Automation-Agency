@@ -27,7 +27,7 @@ export const ComparisonAndQuote: React.FC = () => {
               referrerPolicy="no-referrer"
             />
             <span className="font-mono-tech text-[11px] uppercase tracking-[0.08em] text-[#edf0f5]">
-              RATED 5 STAR BY 120+ CLIENTS
+              RATED 5 STAR BY 30+ CLIENTS
             </span>
           </div>
 

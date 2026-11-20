@@ -6,6 +6,7 @@ import { AsciiWaveBackground } from './AsciiWaveBackground';
 import DriftbarFooter from './DriftbarFooter';
 import { INTRO_CALL_URL } from '../lib/introCall';
 import { RainbowButton } from './RainbowButton';
+import { BookCallButton, GlossyAiButton } from './PillButtons';
 
 interface FooterAndNavProps {
   onNavigate?: (to: string) => void;
@@ -274,17 +275,11 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3.5">
-              <RainbowButton
-                label="TALK TO AN EXPERT"
-                variant="rainbow"
+              <GlossyAiButton
+                label="Talk to an Expert"
                 onClick={() => onOpenContact('Start AI Project')}
               />
-              <RainbowButton
-                label="BOOK AN INTRO CALL"
-                variant="dark"
-                iconSrc="/assets/clavion/GukJuD6D51RayodFgi8oQiSRe0.svg"
-                href={INTRO_CALL_URL}
-              />
+              <BookCallButton />
             </div>
           </div>
           </div>
@@ -611,12 +606,11 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
                   )}
                 </div>
 
-                <div className="pt-2">
-                  <RainbowButton
-                    label={isSubmitting ? 'SENDING REQUEST...' : 'SUBMIT REQUEST'}
-                    variant="rainbow"
-                    fullWidth
+                <div className="pt-2 flex justify-center">
+                  <GlossyAiButton
+                    label={isSubmitting ? 'Sending Request...' : 'Submit Request'}
                     type="submit"
+                    disabled={isSubmitting}
                   />
                 </div>
               </form>
