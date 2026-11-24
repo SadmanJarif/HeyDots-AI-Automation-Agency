@@ -83,17 +83,8 @@ export interface FaqItem {
   answer: string;
 }
 
-export interface BlogPost {
-  id: string;
-  slug: string;
-  category: string;
-  date: string;
-  title: string;
-  image: string;
-  excerpt: string;
-  readTime: string;
-  body: string[];
-}
+export { BLOG_POSTS, BLOG_CATEGORIES, getBlogPostBySlug, getRelatedBlogPosts } from './blogPosts';
+export type { BlogPost, BlogCategory, BlogSection, BlogComparisonTable, BlogVisualBlock, BlogFaq } from './blogTypes';
 
 export const BRAND_LOGOS: BrandLogo[] = [
   { id: 'aeodot', name: 'AEODOT', src: '/assets/partners/aeodot.png', width: 2131, height: 738 },
@@ -418,53 +409,5 @@ export const FAQ_ITEMS: FaqItem[] = [
     question: 'Can you integrate AI with my existing tools and systems?',
     answer:
       'We specialize in connecting AI with your current CRM, databases, apps, and workflow tools so everything works smoothly without changing your entire setup.',
-  },
-];
-
-export const BLOG_POSTS: BlogPost[] = [
-  {
-    id: 'blog-1',
-    slug: 'the-secret-behind-smarter-ai-agents',
-    category: 'AI Agents',
-    date: 'Nov 19, 2025',
-    title: 'The secret behind smarter ai agents',
-    image: '/assets/clavion/6dFSwrvEWM8kmka4N6OEWsmsBXs.jpg',
-    excerpt: 'Why context engineering, deterministic tool guardrails, and structured memory separate production AI agents from brittle demos.',
-    readTime: '5 min read',
-    body: [
-      'Most AI agent prototypes fail the moment they meet real production data. They hallucinate parameters, loop indefinitely on API timeouts, or lose track of multi-step business logic.',
-      'At HeyDots, we architect agents around three foundational pillars: strict schema validation on every tool call, scoped retrieval memory that injects only verified CRM and document state, and human-in-the-loop escalation thresholds.',
-      'When your agent operates inside well-defined guardrails, it transitions from an unpredictable experiment into a dependable digital teammate.',
-    ],
-  },
-  {
-    id: 'blog-2',
-    slug: 'automating-customer-onboarding-with-ai',
-    category: 'Productivity',
-    date: 'Nov 04, 2025',
-    title: 'Automating customer onboarding with ai',
-    image: '/assets/clavion/JjtOaMM1lwc8VyMth6MpGCAk9ZE.jpg',
-    excerpt: 'How modern B2B teams cut onboarding time by 70% using intelligent document parsing, automated workspace provisioning, and proactive check-ins.',
-    readTime: '4 min read',
-    body: [
-      'Customer onboarding sets the tone for long-term retention, yet most teams still rely on manual email threads, spreadsheet checklists, and repetitive data entry across CRM and project tools.',
-      'By combining event-driven workflows in n8n and Make with specialized LLM extraction nodes, teams can automatically parse intake documents, provision workspaces, and schedule personalized kickoff sequences within seconds of contract signature.',
-      'The result is a seamless, zero-friction onboarding experience that lets your account managers focus on high-value strategy instead of administrative busywork.',
-    ],
-  },
-  {
-    id: 'blog-3',
-    slug: 'the-future-of-ai-enhanced-customer-experience',
-    category: 'Tools & Integrations',
-    date: 'Oct 18, 2025',
-    title: 'The future of ai-enhanced customer experience',
-    image: '/assets/clavion/QAID9GfL6acm0c8mWGO750n93k.jpg',
-    excerpt: 'Moving beyond static FAQ bots: how real-time CRM synchronization and sentiment-aware routing transform support into a growth engine.',
-    readTime: '6 min read',
-    body: [
-      'Legacy chatbots frustrated customers with rigid decision trees and generic fallback answers. Today’s AI-enhanced customer experience looks fundamentally different.',
-      'By unifying live order status, subscription history, and documentation into a single real-time retrieval pipeline, modern support agents resolve tier-1 inquiries autonomously while drafting context-rich summaries for complex tier-2 escalations.',
-      'Teams that adopt this hybrid human + AI model consistently report faster resolution times, higher agent satisfaction, and measurable gains in net dollar retention.',
-    ],
   },
 ];
