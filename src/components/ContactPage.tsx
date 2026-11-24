@@ -3,6 +3,7 @@ import { Mail, Phone } from 'lucide-react';
 import ContactWithGlobe from '@/components/ui/contact-with-globe';
 import { validateContactForm } from '../utils/clavionLogic';
 import { INTRO_CALL_URL } from '../lib/introCall';
+import { submitToFormBold } from '../lib/formbold';
 
 interface ContactPageProps {
   onNavigate: (to: string) => void;
@@ -36,20 +37,19 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      const result = await submitToFormBold({
+        ...payload,
+        plan: 'Contact Page Inquiry',
+        source: 'Contact Page',
       });
 
-      const responseData = await response.json().catch(() => ({ ok: response.ok }));
-      if (!response.ok) {
-        setFormError(responseData?.error || 'Unable to submit request. Please try again.');
+      if (!result.ok) {
+        setFormError(result.error || 'Unable to submit request. Please try again.');
         setIsSubmitting(false);
         return;
       }
 
-      const leadRecord = responseData?.lead || {
+      const leadRecord = {
         ...payload,
         id: `lead_${Date.now()}`,
         receivedAt: new Date().toISOString(),

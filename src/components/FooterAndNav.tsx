@@ -5,6 +5,7 @@ import { validateContactForm } from '../utils/clavionLogic';
 import { AsciiWaveBackground } from './AsciiWaveBackground';
 import DriftbarFooter from './DriftbarFooter';
 import { INTRO_CALL_URL } from '../lib/introCall';
+import { FORMBOLD_ENDPOINT, submitToFormBold } from '../lib/formbold';
 import { RainbowButton } from './RainbowButton';
 import { BookCallButton, GlossyAiButton } from './PillButtons';
 
@@ -207,20 +208,18 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      const result = await submitToFormBold({
+        ...payload,
+        source: 'Consultation Modal',
       });
 
-      const responseData = await response.json().catch(() => ({ ok: response.ok }));
-      if (!response.ok) {
-        setFormError(responseData?.error || 'Unable to submit request. Please try again.');
+      if (!result.ok) {
+        setFormError(result.error || 'Unable to submit request. Please try again.');
         setIsSubmitting(false);
         return;
       }
 
-      const leadRecord = responseData?.lead || {
+      const leadRecord = {
         ...payload,
         id: `lead_${Date.now()}`,
         receivedAt: new Date().toISOString(),
@@ -512,7 +511,7 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
               </div>
             ) : (
               <form
-                action="/api/contact"
+                action={FORMBOLD_ENDPOINT}
                 method="POST"
                 onSubmit={handleContactSubmit}
                 className="flex flex-col gap-4"

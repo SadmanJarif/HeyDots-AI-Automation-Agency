@@ -854,7 +854,13 @@ export default function ContactWithGlobe({
 
                 <FormDots />
 
-                <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
+                <form
+                  action="https://formbold.com/s/3pVPY"
+                  method="POST"
+                  onSubmit={onSubmit}
+                  noValidate
+                  className="flex flex-col gap-5"
+                >
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-2">
                       <label
