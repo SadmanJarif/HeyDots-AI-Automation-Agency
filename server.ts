@@ -131,7 +131,7 @@ async function startServer() {
 
     app.use('*', async (req, res, next) => {
       try {
-        const reqPath = req.originalUrl.split('?')[0];
+        const reqPath = req.originalUrl.split('?')[0].replace(/\/+$/, '') || '/';
         const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath) || isBlogPostPath(reqPath);
 
         const templatePath = path.resolve(__dirname, 'index.html');
@@ -151,8 +151,8 @@ async function startServer() {
     app.use(express.static(distDir, { index: false }));
 
     app.use('*', (req, res) => {
-      const reqPath = req.originalUrl.split('?')[0];
-      const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath);
+      const reqPath = req.originalUrl.split('?')[0].replace(/\/+$/, '') || '/';
+      const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath) || isBlogPostPath(reqPath);
       const indexHtmlPath = path.resolve(distDir, 'index.html');
 
       if (fs.existsSync(indexHtmlPath)) {
