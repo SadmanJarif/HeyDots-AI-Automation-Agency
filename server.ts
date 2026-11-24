@@ -35,6 +35,9 @@ const KNOWN_PAGE_PATHS = new Set([
   '/disclaimer',
 ]);
 
+// Blog post slug pattern: /blog/slug
+const isBlogPostPath = (path: string) => path.startsWith('/blog/');
+
 async function startServer() {
   const app = express();
   const PORT = Number(process.env.PORT) || 3000;
@@ -129,7 +132,7 @@ async function startServer() {
     app.use('*', async (req, res, next) => {
       try {
         const reqPath = req.originalUrl.split('?')[0];
-        const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath);
+        const isKnownRoute = KNOWN_PAGE_PATHS.has(reqPath) || isBlogPostPath(reqPath);
 
         const templatePath = path.resolve(__dirname, 'index.html');
         let template = fs.readFileSync(templatePath, 'utf-8');

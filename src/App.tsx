@@ -24,6 +24,7 @@ import { RainbowButton } from './components/RainbowButton';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
 import { BlogPage } from './components/BlogPage';
+import { BlogPostPage } from './components/BlogPostPage';
 import { isLegalPath, LegalPage } from './components/LegalPage';
 import { openIntroCallWindow } from './lib/introCall';
 
@@ -81,8 +82,10 @@ export default function App() {
   const isAboutRoute = normalizedPath === '/about';
   const isContactRoute = normalizedPath === '/contact';
   const isBlogRoute = normalizedPath === '/blog';
+  const isBlogPostRoute = normalizedPath.startsWith('/blog/');
+  const blogPostSlug = isBlogPostRoute ? normalizedPath.replace('/blog/', '') : null;
   const isLegalRoute = isLegalPath(normalizedPath);
-  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute && !isBlogRoute && !isLegalRoute;
+  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute && !isBlogRoute && !isBlogPostRoute && !isLegalRoute;
 
   const handleOpenContact = (defaultPlan = 'AI Consultation') => {
     setContactModalPlan(defaultPlan);
@@ -156,7 +159,12 @@ export default function App() {
             <BlogPage
               onNavigate={navigate}
               onOpenContact={handleOpenContact}
-              onOpenBlogPost={setSelectedBlogPost}
+            />
+          ) : isBlogPostRoute && blogPostSlug ? (
+            <BlogPostPage
+              slug={blogPostSlug}
+              onNavigate={navigate}
+              onOpenContact={handleOpenContact}
             />
           ) : isLegalRoute ? (
             <LegalPage path={normalizedPath} onNavigate={navigate} />
@@ -200,7 +208,7 @@ export default function App() {
         <FooterAndNav
           onNavigate={navigate}
           currentPath={normalizedPath}
-          hideCtaSection={isContactRoute || isBlogRoute}
+          hideCtaSection={isContactRoute || isBlogRoute || isBlogPostRoute}
           onOpenContact={handleOpenContact}
           contactModalPlan={contactModalPlan}
           onCloseContact={() => setContactModalPlan(null)}

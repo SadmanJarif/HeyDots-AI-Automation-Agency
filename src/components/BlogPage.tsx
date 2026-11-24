@@ -7,13 +7,11 @@ import { GlossyAiButton } from './PillButtons';
 interface BlogPageProps {
   onNavigate: (to: string) => void;
   onOpenContact: (defaultPlan?: string) => void;
-  onOpenBlogPost: (post: typeof BLOG_POSTS[0]) => void;
 }
 
 export const BlogPage: React.FC<BlogPageProps> = ({
   onNavigate,
   onOpenContact,
-  onOpenBlogPost,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
@@ -93,7 +91,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="relative rounded-[24px] border border-white/10 bg-[#0c1018]/60 overflow-hidden group cursor-pointer hover:-translate-y-1 transition-transform duration-300"
-            onClick={() => onOpenBlogPost(featuredPost)}
+            onClick={() => onNavigate(`/blog/${featuredPost.slug}`)}
           >
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
               <div className="aspect-[16/10] lg:aspect-auto overflow-hidden">
@@ -140,7 +138,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: index * 0.1 }}
               className="relative rounded-[20px] border border-white/10 bg-[#0c1018]/60 overflow-hidden group cursor-pointer hover:-translate-y-1 transition-all duration-300 hover:border-[#8b5cf6]/30"
-              onClick={() => onOpenBlogPost(post)}
+              onClick={() => onNavigate(`/blog/${post.slug}`)}
             >
               <div className="aspect-[16/10] overflow-hidden">
                 <img
