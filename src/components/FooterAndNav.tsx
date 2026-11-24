@@ -26,6 +26,7 @@ interface FooterAndNavProps {
 const NAV_LINKS = [
   { label: 'Services', href: '/#service', key: 'service' },
   { label: 'Process', href: '/#process', key: 'process' },
+  { label: 'Blog', href: '/blog', key: 'blog' },
   { label: 'About', href: '/about', key: 'about' },
   { label: 'Contact', href: '/contact', key: 'contact' },
 ];
@@ -69,6 +70,7 @@ export const FooterAndNav: React.FC<FooterAndNavProps> = ({
   const linkIsActive = (key: string) => {
     if (key === 'about') return currentPath === '/about';
     if (key === 'contact') return currentPath === '/contact';
+    if (key === 'blog') return currentPath === '/blog';
     return currentPath === '/' && activeHash === key;
   };
 

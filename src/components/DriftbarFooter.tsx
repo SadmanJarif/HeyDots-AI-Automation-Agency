@@ -4,6 +4,7 @@ const EXPLORE_LINKS = [
   { label: 'Services', href: '/#service' },
   { label: 'Growth Analytics', href: '/#growth' },
   { label: 'Process', href: '/#process' },
+  { label: 'Blog', href: '/blog' },
   { label: 'About Us', href: '/about' },
 ];
 

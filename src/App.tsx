@@ -23,6 +23,7 @@ import { FooterAndNav } from './components/FooterAndNav';
 import { RainbowButton } from './components/RainbowButton';
 import { AboutPage } from './components/AboutPage';
 import { ContactPage } from './components/ContactPage';
+import { BlogPage } from './components/BlogPage';
 import { isLegalPath, LegalPage } from './components/LegalPage';
 import { openIntroCallWindow } from './lib/introCall';
 
@@ -79,8 +80,9 @@ export default function App() {
   const isHomeRoute = normalizedPath === '/';
   const isAboutRoute = normalizedPath === '/about';
   const isContactRoute = normalizedPath === '/contact';
+  const isBlogRoute = normalizedPath === '/blog';
   const isLegalRoute = isLegalPath(normalizedPath);
-  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute && !isLegalRoute;
+  const isNotFoundRoute = !isHomeRoute && !isAboutRoute && !isContactRoute && !isBlogRoute && !isLegalRoute;
 
   const handleOpenContact = (defaultPlan = 'AI Consultation') => {
     setContactModalPlan(defaultPlan);
@@ -150,6 +152,12 @@ export default function App() {
             />
           ) : isContactRoute ? (
             <ContactPage onNavigate={navigate} />
+          ) : isBlogRoute ? (
+            <BlogPage
+              onNavigate={navigate}
+              onOpenContact={handleOpenContact}
+              onOpenBlogPost={setSelectedBlogPost}
+            />
           ) : isLegalRoute ? (
             <LegalPage path={normalizedPath} onNavigate={navigate} />
           ) : (
@@ -192,7 +200,7 @@ export default function App() {
         <FooterAndNav
           onNavigate={navigate}
           currentPath={normalizedPath}
-          hideCtaSection={isContactRoute}
+          hideCtaSection={isContactRoute || isBlogRoute}
           onOpenContact={handleOpenContact}
           contactModalPlan={contactModalPlan}
           onCloseContact={() => setContactModalPlan(null)}

@@ -26,6 +26,7 @@ const KNOWN_PAGE_PATHS = new Set([
   '/',
   '/index.html',
   '/about',
+  '/blog',
   '/contact',
   '/cookie-policy',
   '/terms',
@@ -93,9 +94,26 @@ async function startServer() {
     });
   });
 
-  // Serve public static assets (robots.txt, sitemap.xml, favicon.ico, assets/*)
+  // Serve public static assets (robots.txt, sitemap.xml, manifest.json, favicon.ico, assets/*)
   const publicDir = path.resolve(__dirname, 'public');
   app.use(express.static(publicDir));
+
+  // SEO files
+  app.get('/robots.txt', (req, res) => {
+    res.sendFile(path.join(publicDir, 'robots.txt'));
+  });
+
+  app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(path.join(publicDir, 'sitemap.xml'));
+  });
+
+  app.get('/llms.txt', (req, res) => {
+    res.sendFile(path.join(publicDir, 'llms.txt'));
+  });
+
+  app.get('/manifest.json', (req, res) => {
+    res.sendFile(path.join(publicDir, 'manifest.json'));
+  });
 
   const isProduction = process.env.NODE_ENV === 'production';
 
